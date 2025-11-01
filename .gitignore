@@ -1,36 +1,203 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ======================================================
+# NODE / FRONTEND (Next.js, React, etc.)
+# ======================================================
 
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.js
 
-# testing
+# Testing
 /coverage
 
-# next.js
+# Next.js build outputs
 /.next/
-/out/
+ /out/
 
-# production
+# Production build
 /build
 
-# misc
+# Misc
 .DS_Store
 *.pem
 
-# debug
+# Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# Local environment files
 .env
+.env*.local
 
-# vercel
+# Vercel deployment
 .vercel
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# ======================================================
+# DJANGO / PYTHON BACKEND
+# ======================================================
+
+# Django-specific
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+
+# ======================================================
+# PACKAGING & DISTRIBUTION
+# ======================================================
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+
+# ======================================================
+# BUILD / INSTALLER / TEST OUTPUTS
+# ======================================================
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+
+
+# ======================================================
+# FRAMEWORK-SPECIFIC
+# ======================================================
+
+# Flask
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+
+# ======================================================
+# NOTEBOOKS & PYTHON TOOLS
+# ======================================================
+
+# Jupyter
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+
+# ======================================================
+# ENVIRONMENTS
+# ======================================================
+
+# Environment folders
+.env
+backend/venv
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# PDM & PEP 582
+.pdm.toml
+__pypackages__/
+
+
+# ======================================================
+# TASK / TOOL SPECIFIC
+# ======================================================
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# Spyder / Rope IDEs
+.spyderproject
+.spyproject
+.ropeproject
+
+# mkdocs
+/site
+
+
+# ======================================================
+# TYPE CHECKERS & ANALYSIS
+# ======================================================
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# pytype
+.pytype/
+
+# Cython debug symbols
+cython_debug/
