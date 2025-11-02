@@ -1,6 +1,6 @@
 import EditorLayout from "../../../components/layouts/EditorLayout.jsx";
 import { Heading, Button, Table, Stack, Box } from "@chakra-ui/react";
-import { LuPlus } from "react-icons/lu";
+import AddTag from "../../../components/AddTag.jsx";
 
 export default function TagManagement() {
   return (
@@ -10,10 +10,7 @@ export default function TagManagement() {
       <Stack>
         {/*new tag btn*/}
         <Box display="flex" justifyContent="flex-end">
-          <Button size="xs" background="purple.500" color="white">
-            <LuPlus />
-            New Tag
-          </Button>
+          <AddTag />
         </Box>
 
         {/*tag table*/}
@@ -22,7 +19,9 @@ export default function TagManagement() {
             <Table.Row>
               <Table.ColumnHeader>Tag Name</Table.ColumnHeader>
               <Table.ColumnHeader>Usage Count</Table.ColumnHeader>
-              <Table.ColumnHeader  textAlign="center">Actions</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="center">
+                Actions
+              </Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
 
