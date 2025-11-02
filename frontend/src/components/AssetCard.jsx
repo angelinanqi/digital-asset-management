@@ -41,11 +41,11 @@ export default function AssetCard() {
         <div>
             <br />
             {/* Temporary header for the Digital Assets segment */}
-            <h1><b>Digital Assets</b></h1>
+            <h1>Digital Assets</h1>
             <br />
 
             {/* Loop through the 'assets' array based on ID */}
-            <Flex gap={25} direction='row' wrap='wrap'>
+            <Flex gap={31} direction='row' wrap='wrap'>
                 {assets.map((asset) => {
                     return (
                         <Card.Root
@@ -136,8 +136,8 @@ export default function AssetCard() {
                                                                 <p>{asset.description}</p>
 
                                                                 <Button
-                                                                variant='outline'
-                                                                colorPalette='purple'
+                                                                    variant='outline'
+                                                                    colorPalette='purple'
                                                                 >
                                                                     Preview Asset
                                                                 </Button>
@@ -154,10 +154,10 @@ export default function AssetCard() {
                                                                     Edit Asset
                                                                 </Button>
 
-                                                                <Button 
-                                                                variant='outline' 
-                                                                colorPalette='purple'
-                                                                onClick={() => deleteAsset(asset.id)}
+                                                                <Button
+                                                                    variant='outline'
+                                                                    colorPalette='purple'
+                                                                    onClick={() => deleteAsset(asset.id)}
                                                                 >
                                                                     Delete Asset
                                                                 </Button>
