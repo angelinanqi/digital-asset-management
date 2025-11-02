@@ -2,6 +2,7 @@
 
 import EditorLayout from "../../../components/layouts/EditorLayout.jsx";
 import { Heading, Button, Table, Stack, Box } from "@chakra-ui/react";
+import { toaster } from "../../../styles/ui/toaster.jsx";
 import AddTag from "../../../components/AddTag.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -28,6 +29,10 @@ export default function TagManagement() {
   async function handleDeleteTags(tag_id) {
     try {
       await axios.delete(BASE_API_URL + tag_id + "/");
+      toaster.create({
+        description: "Tag deleted successfully!",
+        duration: 3000,
+      });
     } catch (error) {
       console.error("Error:", error);
     }
