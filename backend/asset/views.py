@@ -13,4 +13,3 @@ class AssetViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagSerializer
-    parser_classes = [MultiPartParser]
