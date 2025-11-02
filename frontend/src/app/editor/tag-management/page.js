@@ -6,13 +6,16 @@ import AddTag from "../../../components/AddTag.jsx";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+//TODO: when delete or add tag, reflect that in the ui immediately instead of reload
+
 export default function TagManagement() {
+  const BASE_API_URL = "http://127.0.0.1:8000/tags/";
   const [tags, setTags] = useState([]);
 
   useEffect(() => {
     async function fetchTags() {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/tags/");
+        const response = await axios.get(BASE_API_URL);
         setTags(response.data.results); //have to specify want the results array part of response data
       } catch (error) {
         console.error("Error:", error);
@@ -21,6 +24,14 @@ export default function TagManagement() {
 
     fetchTags();
   }, []);
+
+  async function handleDeleteTags(tag_id) {
+    try {
+      await axios.delete(BASE_API_URL + tag_id + "/");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 
   return (
     <EditorLayout>
@@ -56,7 +67,12 @@ export default function TagManagement() {
                     <Button size="xs" bg="gray.400">
                       Edit
                     </Button>
-                    <Button size="xs" bg="red.600" marginLeft={"10px"}>
+                    <Button
+                      size="xs"
+                      bg="red.600"
+                      marginLeft={"10px"}
+                      onClick={() => handleDeleteTags(tag.id)}
+                    >
                       Delete
                     </Button>
                   </Table.Cell>

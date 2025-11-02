@@ -14,13 +14,14 @@ import { useState } from "react";
 import axios from "axios";
 
 export default function AddTag() {
+  const BASE_API_URL = "http://127.0.0.1:8000/tags/";
   const [title, setTitle] = useState("");
 
   async function handleCreateTag() {
     const newTag = { title };
 
     try {
-      await axios.post("http://127.0.0.1:8000/tags/", newTag);
+      await axios.post(BASE_API_URL, newTag);
 
       toaster.create({
         description: "Tag created successfully!🎉",
