@@ -16,25 +16,24 @@ import axios from "axios";
 export default function AddTag() {
   const [title, setTitle] = useState("");
 
-  function handleCreateTag() {
+  async function handleCreateTag() {
     const newTag = { title };
 
-    axios
-      .post("http://127.0.0.1:8000/tags/", newTag)
-      .then((res) => {
-        toaster.create({
-          description: "Tag created successfully!🎉",
-          duration: 3000,
-        });
-        setTitle(""); //reset input
-      })
-      .catch((err) => {
-        //console.error("Error:", err);
-        toaster.create({
-          description: "Error! Unable to create tag.",
-          duration: 3000,
-        });
+    try {
+      await axios.post("http://127.0.0.1:8000/tags/", newTag);
+
+      toaster.create({
+        description: "Tag created successfully!🎉",
+        duration: 3000,
       });
+
+      setTitle(""); //clear input
+    } catch (error) {
+      toaster.create({
+        description: "Error! Unable to create tag.",
+        duration: 3000,
+      });
+    }
   }
 
   return (

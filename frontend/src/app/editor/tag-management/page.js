@@ -1,8 +1,27 @@
+"use client";
+
 import EditorLayout from "../../../components/layouts/EditorLayout.jsx";
 import { Heading, Button, Table, Stack, Box } from "@chakra-ui/react";
 import AddTag from "../../../components/AddTag.jsx";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function TagManagement() {
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    async function fetchTags() {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/tags/");
+        setTags(response.data.results); //have to specify want the results array part of response data
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchTags();
+  }, []);
+
   return (
     <EditorLayout>
       <Heading>Tag Management</Heading>
@@ -18,7 +37,9 @@ export default function TagManagement() {
           <Table.Header>
             <Table.Row>
               <Table.ColumnHeader>Tag Name</Table.ColumnHeader>
-              <Table.ColumnHeader>Usage Count</Table.ColumnHeader>
+              <Table.ColumnHeader textAlign="center">
+                Usage Count
+              </Table.ColumnHeader>
               <Table.ColumnHeader textAlign="center">
                 Actions
               </Table.ColumnHeader>
@@ -26,24 +47,31 @@ export default function TagManagement() {
           </Table.Header>
 
           <Table.Body>
-            {items.map((item) => (
-              <Table.Row key={item.id}>
-                <Table.Cell>{item.name}</Table.Cell>
-                <Table.Cell>{item.category}</Table.Cell>
-                <Table.Cell textAlign="center">{item.price}</Table.Cell>
+            {tags.length > 0 ? (
+              tags.map((tag) => (
+                <Table.Row key={tag.id}>
+                  <Table.Cell>{tag.title}</Table.Cell>
+                  <Table.Cell textAlign="center">0</Table.Cell>
+                  <Table.Cell textAlign="center">
+                    <Button size="xs" bg="gray.400">
+                      Edit
+                    </Button>
+                    <Button size="xs" bg="red.600" marginLeft={"10px"}>
+                      Delete
+                    </Button>
+                  </Table.Cell>
+                </Table.Row>
+              ))
+            ) : (
+              <Table.Row>
+                <Table.Cell colSpan={3} textAlign="center">
+                  No tags found!
+                </Table.Cell>
               </Table.Row>
-            ))}
+            )}
           </Table.Body>
         </Table.Root>
       </Stack>
     </EditorLayout>
   );
 }
-
-const items = [
-  { id: 1, name: "Laptop", category: "Electronics", price: 999.99 },
-  { id: 2, name: "Coffee Maker", category: "Home Appliances", price: 49.99 },
-  { id: 3, name: "Desk Chair", category: "Furniture", price: 150.0 },
-  { id: 4, name: "Smartphone", category: "Electronics", price: 799.99 },
-  { id: 5, name: "Headphones", category: "Accessories", price: 199.99 },
-];
