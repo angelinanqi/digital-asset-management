@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -30,7 +30,7 @@ body {
   margin: 0;
 } */
 
-a {
+/* a {
   color: inherit;
   text-decoration: none;
 }
@@ -39,4 +39,10 @@ a {
   html {
     color-scheme: light;
   }
+}  */
+
+
+:root{
+  background: white;
+  color: black;
 }
