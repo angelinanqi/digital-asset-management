@@ -1,32 +1,32 @@
 import { Image, Flex, Button, InputGroup, Input, Box } from "@chakra-ui/react";
 import Logo from "../assets/Logo.png";
 import { LuSearch } from "react-icons/lu";
+import Link from "next/link";
 
-function NavItem({ children }) {
-  function clickHandler() {
-    //route to children
-  }
-
+function NavItem({ label, href }) {
   return (
-    <Box
-      cursor="pointer"
-      px="15px"
-      py="10px"
-      bg="white"
-      color="black"
-      borderBottomWidth="1px"
-      borderBottomColor="gray.500/50"
-      _hover={{
-        borderBottomWidth: "2px",
-        borderBottomColor: "purple.400",
-      }}
-    >
-      {children}
-    </Box>
+    <Link href={href} passHref>
+      <Box
+        as="span"
+        cursor="pointer"
+        px="15px"
+        py="10px"
+        bg="white"
+        color="black"
+        borderBottomWidth="1px"
+        borderBottomColor="gray.500/50"
+        _hover={{
+          borderBottomWidth: "2px",
+          borderBottomColor: "purple.400",
+        }}
+      >
+        {label}
+      </Box>
+    </Link>
   );
 }
 
-export default function NavBar() {
+export default function NavBar({ items = [] }) {
   return (
     <>
       {/*Upper NavBar - logo, search bar, login btn*/}
@@ -59,8 +59,9 @@ export default function NavBar() {
       </Flex>
 
       <Flex align="center" bg="white">
-        <NavItem>Assets</NavItem>
-        <NavItem>Tag Management</NavItem>
+        {items.map((item) => (
+          <NavItem key={item.title} label={item.title} href={item.page} />
+        ))}
       </Flex>
     </>
   );
