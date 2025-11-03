@@ -9,6 +9,8 @@ import axios from "axios";
 
 //TODO: when add tag, reflect that in the ui immediately instead of reload
 //TODO: when input value in edit tag mode is not changed/same, disable save
+//TODO: when delete show confirmatory dialog
+//TODO: delete all tags
 
 export default function TagManagement() {
   const BASE_API_URL = "http://127.0.0.1:8000/tags/";

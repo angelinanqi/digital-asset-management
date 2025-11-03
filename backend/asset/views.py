@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Asset, Tags
-from .serializers import AssetSerializer, TagSerializer
+from .models import Asset, Tags, AssetTags
+from .serializers import AssetSerializer, TagSerializer, AssetTagSerializer
 from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser
 
@@ -13,3 +13,7 @@ class AssetViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagSerializer
+
+class AssetTagViewSet(viewsets.ModelViewSet):
+    queryset = AssetTags.objects.all()
+    serializer_class = AssetTagSerializer
