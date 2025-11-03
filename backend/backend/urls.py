@@ -24,6 +24,8 @@ from asset import views as asset_views
 
 router = routers.DefaultRouter()
 router.register(r'assets', asset_views.AssetViewSet)
+router.register(r'tags', asset_views.TagViewSet)
+router.register(r'assettag', asset_views.AssetTagViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
