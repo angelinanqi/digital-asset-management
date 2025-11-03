@@ -1,7 +1,9 @@
 'use client';
 
-import { Avatar, Button, Card, CloseButton, Dialog, Flex, Portal, Image, Stack } from '@chakra-ui/react';
+import { Avatar, Button, Card, Flex } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
+import PreviewAssetModal from './previews/PreviewAssetModal';
+import EditAssetModal from './EditAssetModal';
 import useDownloader from 'react-use-downloader';
 import axios from 'axios';
 
@@ -41,11 +43,11 @@ export default function AssetCard() {
         <div>
             <br />
             {/* Temporary header for the Digital Assets segment */}
-            <h1><b>Digital Assets</b></h1>
+            <h1>Digital Assets</h1>
             <br />
 
             {/* Loop through the 'assets' array based on ID */}
-            <Flex gap={25} direction='row' wrap='wrap'>
+            <Flex gap={31} direction='row' wrap='wrap'>
                 {assets.map((asset) => {
                     return (
                         <Card.Root
@@ -85,94 +87,9 @@ export default function AssetCard() {
 
                             {/* Asset card footer with buttons and its dialogs */}
                             <Card.Footer justifyContent='flex-end'>
-                                {/* View Button - dialog modal' */}
-                                <Dialog.Root>
-                                    <Dialog.Trigger asChild>
-                                        <Button variant='outline'>View</Button>
-                                    </Dialog.Trigger>
-                                    <Portal>
-                                        <Dialog.Backdrop />
-                                        <Dialog.Positioner>
-                                            <Dialog.Content>
-                                                <Dialog.Header>
-                                                    <Dialog.Title>{asset.name}</Dialog.Title>
-                                                </Dialog.Header>
-                                                <Dialog.Body>
-                                                    <Flex gap='4' direction='row'>
-                                                        <Flex direction='column'>
-                                                            <Stack>
-                                                                {/* Display asset preview (image/model) */}
-                                                                {/* Note: this part needs to be changed later */}
 
-                                                                <Image
-                                                                    rounded='lg'
-                                                                    height='200px'
-                                                                    width='1000px'
-                                                                    wrap='wrap'
-                                                                    src={asset.url}
-                                                                />
-
-                                                                {/* Display asset details */}
-                                                                <p>
-                                                                    <b>Type:</b> {asset.file_type}
-                                                                </p>
-                                                                <p>
-                                                                    <b>Size:</b> {asset.file_size} MB
-                                                                </p>
-                                                                <p>
-                                                                    <b>Uploaded By:</b> {asset.uploaded_by}
-                                                                </p>
-                                                                <p>
-                                                                    <b>Upload Datetime:</b> {asset.upload_datetime}
-                                                                </p>
-                                                            </Stack>
-                                                        </Flex>
-
-                                                        <Flex direction='column'>
-                                                            <Stack>
-                                                                <h1>
-                                                                    <b>Description</b>
-                                                                </h1>
-                                                                <p>{asset.description}</p>
-
-                                                                <Button
-                                                                variant='outline'
-                                                                colorPalette='purple'
-                                                                >
-                                                                    Preview Asset
-                                                                </Button>
-
-                                                                <Button
-                                                                    variant="outline"
-                                                                    colorPalette='purple'
-                                                                    onClick={() => download(asset.url, asset.name + '.' + asset.file_type)}
-                                                                >
-                                                                    Download Asset
-                                                                </Button>
-
-                                                                <Button variant='outline' colorPalette='purple'>
-                                                                    Edit Asset
-                                                                </Button>
-
-                                                                <Button 
-                                                                variant='outline' 
-                                                                colorPalette='purple'
-                                                                onClick={() => deleteAsset(asset.id)}
-                                                                >
-                                                                    Delete Asset
-                                                                </Button>
-
-                                                            </Stack>
-                                                        </Flex>
-                                                    </Flex>
-                                                </Dialog.Body>
-                                                <Dialog.CloseTrigger asChild>
-                                                    <CloseButton size='sm' />
-                                                </Dialog.CloseTrigger>
-                                            </Dialog.Content>
-                                        </Dialog.Positioner>
-                                    </Portal>
-                                </Dialog.Root>
+                                {/* NOTE: INSERT PREVIEW BUTTON HERE */}
+                                <PreviewAssetModal asset={asset}/>
 
                                 {/* Can insert more features here (Button) */}
                                 <Button
@@ -182,7 +99,9 @@ export default function AssetCard() {
                                     Download
                                 </Button>
 
-                                <Button variant='outline'>Edit</Button>
+                                {/* Button: Edit asset (name and description) */}
+                                <EditAssetModal asset={asset}/>
+                                
                             </Card.Footer>
                         </Card.Root>
                     );

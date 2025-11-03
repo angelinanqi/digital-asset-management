@@ -6,8 +6,13 @@ export default function EditorHome() {
   return (
     <>
       <EditorLayout>
+
+        {/* Display 'Upload' button to open modal */}
         <UploadAssetModal />
-        <AssetCard/>
+
+        {/* Display asset in card format  */}
+        <AssetCard />
+
       </EditorLayout>
     </>
   );
