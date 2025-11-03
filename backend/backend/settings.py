@@ -140,3 +140,5 @@ CORS_ALLOWED_ORIGINS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+X_FRAME_OPTIONS = 'ALLOW-FROM http://localhost:3000'

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   /* config options here */
-   images: {
+  images: {
     remotePatterns: [
       {
         protocol: 'http',
@@ -12,10 +12,10 @@ const nextConfig = {
     ],
   },
 
-    experimental: {
+  experimental: {
     optimizePackageImports: ['@chakra-ui/react']
   },
-  
+
   reactCompiler: true,
 };
 
