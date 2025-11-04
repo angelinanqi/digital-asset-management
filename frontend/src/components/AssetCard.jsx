@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, Button, Card, Flex, Input, InputGroup } from "@chakra-ui/react";
-import { LuSearch } from 'react-icons/lu';
+import { LuSearch } from "react-icons/lu";
 import { useState, useEffect } from "react";
 import PreviewAssetModal from "./previews/PreviewAssetModal";
 import EditAssetModal from "./EditAssetModal";
@@ -16,8 +16,8 @@ export default function AssetCard() {
   //state var and setter
   const [assets, setAssets] = useState([]); // Stores list of each asset and its details
   const [assetTagMap, setAssetTagMap] = useState({});
-  const [searchKeyword, setSearchKeyword] = useState('');
-  
+  const [searchKeyword, setSearchKeyword] = useState("");
+
   //handlers
   const { download } = useDownloader(); // Handler to download asset files
 
@@ -38,19 +38,16 @@ export default function AssetCard() {
 
   //useEffect
   useEffect(() => {
+    const getAssets = async () => {
+      const url = searchKeyword
+        ? BASE_API_URL_ASSETS + "?search=" + searchKeyword
+        : BASE_API_URL_ASSETS;
 
-          const getAssets = async () => {
-            const url = searchKeyword 
-                ? BASE_API_URL_ASSETS + '?search=' + searchKeyword
-                : BASE_API_URL_ASSETS
+      const response = await axios.get(url);
 
-            const response = await axios.get(url);
-
-            setAssets(response.data.results);
-
-        }
+      setAssets(response.data.results);
+    };
     // Call this function to retrieve all assets
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     getAssets(); //suppress error, should be no problem as can render properly. most likely strict mode ba
   }, [searchKeyword]); // Note: Using [] to only call getAssets() once for each render
 
@@ -92,22 +89,22 @@ export default function AssetCard() {
       <h1>Digital Assets</h1>
       <br />
 
-	              <Flex flex="1" justify="center">
-                      <InputGroup endElement={<LuSearch />} width="1/2">
-                        <Input
-                          color="black"
-                          variant="outline"
-                          borderColor="gray.700/20"
-                          placeholder="What are you looking for?"
-                          value={searchKeyword}
-                          onChange={(e) => setSearchKeyword(e.target.value)}
-                        />
-                      </InputGroup>
-                    </Flex>
-            
-            <br/>
+      <Flex flex="1" justify="center">
+        <InputGroup endElement={<LuSearch />} width="1/2">
+          <Input
+            color="black"
+            variant="outline"
+            borderColor="gray.700/20"
+            placeholder="What are you looking for?"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+        </InputGroup>
+      </Flex>
 
-            <h1>{searchKeyword}</h1>
+      <br />
+
+      <h1>{searchKeyword}</h1>
 
       {/* Loop through the 'assets' array based on ID */}
       <Flex gap={31} direction="row" wrap="wrap">
