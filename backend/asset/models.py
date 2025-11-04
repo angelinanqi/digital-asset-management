@@ -57,11 +57,11 @@ class Tags(models.Model):
     title = models.CharField(max_length=50, null=False, blank=False, unique=True)
 
 
-class AssetTags(models.Model):
-    """
-    Connect assets with their respective tags.
-    Primary key uses composite key asset id and order id.
-    """
-    pk = models.CompositePrimaryKey("asset", "tag")
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tags, on_delete=models.CASCADE)
+# class AssetTags(models.Model):
+#     """
+#     Connect assets with their respective tags.
+#     Primary key uses composite key asset id and order id.
+#     """
+#     pk = models.CompositePrimaryKey("asset", "tag")
+#     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+#     tag = models.ForeignKey(Tags, on_delete=models.CASCADE)

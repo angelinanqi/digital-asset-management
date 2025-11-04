@@ -1,133 +1,209 @@
-'use client';
+"use client";
 
-import { Box, Button, CloseButton, Dialog, Field, Input, Portal, Stack, FileUpload, Textarea, Icon } from '@chakra-ui/react';
-import { LuUpload } from 'react-icons/lu';
-import { useState } from 'react';
-import { fileTypeFromBlob } from 'file-type';
-import axios from 'axios';
+import {
+  Box,
+  Button,
+  CloseButton,
+  Dialog,
+  Field,
+  Input,
+  Portal,
+  Stack,
+  FileUpload,
+  Textarea,
+  Icon,
+  Tag,
+  Flex,
+  Spinner,
+} from "@chakra-ui/react";
+import { LuUpload } from "react-icons/lu";
+import { HiPlus } from "react-icons/hi";
+import { useState, useEffect } from "react";
+import { fileTypeFromBlob } from "file-type";
+import axios from "axios";
+import useTags from "../hooks/useTags";
 
 export default function UploadAssetModal() {
-    // state variables to store asset details
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [file, setFile] = useState(null);
 
-    async function handleAssetFileUpload() {
-        // validate to ensure file exists
-        if (!file) return;
+  // state variables to store asset details
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [file, setFile] = useState(null);
 
-        // convert file size from bytes to MB
-        const file_size = file.size / (1024 * 1024);
+  // state variable to store tag
+  const { tags, loading, error } = useTags();
+  const [selectedTag, setSelectedTag] = useState([]);
 
-        // get file type (some types can't be read)
-        const file_type = await fileTypeFromBlob(file);
+  async function handleAssetFileUpload() {
+    // validate to ensure file exists
+    if (!file) return;
 
-        // build key-value pairs for uploading an asset
-        const assetFormData = new FormData();
+    // convert file size from bytes to MB
+    const file_size = file.size / (1024 * 1024);
 
-        // add asset data (user input) to the FormData
-        assetFormData.append('name', name); // name
-        assetFormData.append('description', description); // description
+    // get file type (some types can't be read)
+    const file_type = await fileTypeFromBlob(file);
 
-        assetFormData.append('uploaded_by', 'braaaaa_yaaaaan'); // uploaded_by (hardcoded)
-        assetFormData.append('file_type', file_type.ext); // file_type (.mime can be read as well)
-        assetFormData.append('file_size', file_size) // file_size (in MB)
-        assetFormData.append('url', file);
+    // build key-value pairs for uploading an asset
+    const assetFormData = new FormData();
 
-        // POST method to upload asset (file) to backend endpoint
-        try {
-            await axios.post('http://127.0.0.1:8000/assets/', assetFormData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-        }
-        catch (err) {
-            // Does not do anything for now.
-            console.log('error', err)
-        }
+    // add asset data (user input) to the FormData
+    assetFormData.append("name", name); // name
+    assetFormData.append("description", description); // description
+
+    assetFormData.append("uploaded_by", "braaaaa_yaaaaan"); // uploaded_by (hardcoded)
+    assetFormData.append("file_type", file_type.ext); // file_type (.mime can be read as well)
+    assetFormData.append("file_size", file_size); // file_size (in MB)
+    assetFormData.append("url", file);
+
+    // POST method to upload asset (file) to backend endpoint
+    try {
+      await axios.post("http://127.0.0.1:8000/assets/", assetFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    } catch (err) {
+      // Does not do anything for now.
+      console.log("error", err);
     }
+  }
 
-    return (
-        
-        <Dialog.Root>
-            <Dialog.Trigger asChild>
-                <Button variant='outline'>Upload Asset</Button>
-            </Dialog.Trigger>
+  //==============
+  //     tags
+  //==============
 
-            <Portal>
-                <Dialog.Backdrop />
+  async function handleTagSelect(tag_id) {
+    setSelectedTag((prevSelected) => {
+      if (prevSelected.includes(tag_id)) {
+        // if already selected, remove it
+        return prevSelected.filter((id) => id !== tag_id);
+      } else {
+        // otherwise add it
+        return [...prevSelected, tag_id];
+      }
+    });
+  }
 
-                <Dialog.Positioner>
-                    <Dialog.Content>
-                        <Dialog.Header>
-                            <Dialog.Title>Upload New Asset</Dialog.Title>
-                        </Dialog.Header>
+  //===========
+  //asset tags
+  //===========
 
-                        <Dialog.Body pb='4'>
-                            <Stack gap='4'>
-                                {/* Name field */}
-                                <Field.Root>
-                                    <Field.Label>Name</Field.Label>
-                                    <Input
-                                        placeholder='Name'
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
-                                </Field.Root>
+  async function handleSaveAssetTag(asset_id, tag_id){
+    return;
+  }
 
-                                {/* Description field */}
-                                <Field.Root>
-                                    <Field.Label>Description</Field.Label>
-                                    <Textarea
-                                        placeholder='Description'
-                                        value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
-                                    />
-                                </Field.Root>
+  return (
+    <Dialog.Root>
+      <Dialog.Trigger asChild>
+        <Button variant="outline">Upload Asset</Button>
+      </Dialog.Trigger>
 
-                                {/* Asset file upload */}
-                                <FileUpload.Root
-                                    maxW='lg'
-                                    alignItems='stretch'
-                                    maxFiles={1}
-                                >
-                                    <FileUpload.Label>File</FileUpload.Label>
-                                    <FileUpload.HiddenInput
-                                        onChange={(e) => setFile(e.target.files[0])}
-                                    />
+      <Portal>
+        <Dialog.Backdrop />
 
-                                    <FileUpload.Dropzone>
-                                        <Icon size='md' color='fg.muted'>
-                                            <LuUpload />
-                                        </Icon>
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Dialog.Header>
+              <Dialog.Title>Upload New Asset</Dialog.Title>
+            </Dialog.Header>
 
-                                        <FileUpload.DropzoneContent>
-                                            <Box>Drop file here.</Box>
-                                        </FileUpload.DropzoneContent>
-                                    </FileUpload.Dropzone>
+            <Dialog.Body pb="4">
+              <Stack gap="4">
+                {/* Name field */}
+                <Field.Root>
+                  <Field.Label>Name</Field.Label>
+                  <Input
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </Field.Root>
 
-                                    <FileUpload.List />
-                                </FileUpload.Root>
+                {/* Description field */}
+                <Field.Root>
+                  <Field.Label>Description</Field.Label>
+                  <Textarea
+                    placeholder="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </Field.Root>
 
-                                {/* Add tags here */}
-                            </Stack>
-                        </Dialog.Body>
-                        <Dialog.CloseTrigger asChild>
-                            <CloseButton size='sm' />
-                        </Dialog.CloseTrigger>
+                {/* Asset file upload */}
+                <FileUpload.Root maxW="lg" alignItems="stretch" maxFiles={1}>
+                  <FileUpload.Label>File</FileUpload.Label>
+                  <FileUpload.HiddenInput
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
 
-                        <Dialog.Footer>
-                            <Dialog.ActionTrigger asChild>
-                                <Button variant='outline'>Cancel</Button>
-                            </Dialog.ActionTrigger>
+                  <FileUpload.Dropzone>
+                    <Icon size="md" color="fg.muted">
+                      <LuUpload />
+                    </Icon>
 
-                            <Dialog.ActionTrigger asChild>
-                                <Button onClick={handleAssetFileUpload}>Upload</Button>
-                            </Dialog.ActionTrigger>
+                    <FileUpload.DropzoneContent>
+                      <Box>Drop file here.</Box>
+                    </FileUpload.DropzoneContent>
+                  </FileUpload.Dropzone>
 
-                        </Dialog.Footer>
-                    </Dialog.Content>
-                </Dialog.Positioner>
-            </Portal>
-        </Dialog.Root>
-    );
+                  <FileUpload.List />
+                </FileUpload.Root>
+
+                {/* Add tags here */}
+                <Field.Root>
+                  <Field.Label>Tags</Field.Label>
+
+                  <Flex gap="1" wrap="wrap">
+                    {loading ? (
+                      <Spinner size="lg" color="purple.500" />
+                    ) : error ? (
+                      <p>{error}</p>
+                    ) : tags.length > 0 ? (
+                      tags.map((tag) => {
+                        const isSelected = selectedTag.includes(tag.id);
+                        return (
+                          <Tag.Root
+                            key={tag.id}
+                            size="lg"
+                            bg={isSelected ? "purple.500" : "gray.100"}
+                            variant={isSelected ? "solid" : "subtle"}
+                            _hover={{ cursor: "pointer" }}
+                            onClick={() => handleTagSelect(tag.id)}
+                            display="inline-flex"
+                            mr="2"
+                            mb="2"
+                          >
+                            {!isSelected && (
+                              <Tag.StartElement>
+                                <HiPlus />
+                              </Tag.StartElement>
+                            )}
+                            <Tag.Label>{tag.title}</Tag.Label>
+                          </Tag.Root>
+                        );
+                      })
+                    ) : (
+                      <p>No tags found!</p>
+                    )}
+                  </Flex>
+                </Field.Root>
+              </Stack>
+            </Dialog.Body>
+            <Dialog.CloseTrigger asChild>
+              <CloseButton size="sm" />
+            </Dialog.CloseTrigger>
+
+            <Dialog.Footer>
+              <Dialog.ActionTrigger asChild>
+                <Button variant="outline">Cancel</Button>
+              </Dialog.ActionTrigger>
+
+              <Dialog.ActionTrigger asChild>
+                <Button onClick={handleAssetFileUpload}>Upload</Button>
+              </Dialog.ActionTrigger>
+            </Dialog.Footer>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
+  );
 }

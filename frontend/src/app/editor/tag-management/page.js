@@ -1,11 +1,20 @@
 "use client";
 
 import EditorLayout from "../../../components/layouts/EditorLayout.jsx";
-import { Heading, Button, Table, Stack, Box, Input } from "@chakra-ui/react";
+import {
+  Heading,
+  Button,
+  Table,
+  Stack,
+  Box,
+  Input,
+  Spinner,
+} from "@chakra-ui/react";
 import { toaster } from "../../../styles/ui/toaster.jsx";
 import AddTag from "../../../components/AddTag.jsx";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
+import useTags from "../../../hooks/useTags.js";
 
 //TODO: when add tag, reflect that in the ui immediately instead of reload
 //TODO: when input value in edit tag mode is not changed/same, disable save
@@ -14,23 +23,10 @@ import axios from "axios";
 
 export default function TagManagement() {
   const BASE_API_URL = "http://127.0.0.1:8000/tags/";
-  const [tags, setTags] = useState([]);
+  const { tags, loading, error } = useTags();
 
   const [editingID, setEditingID] = useState(null);
   const [editingTitle, setEditingTitle] = useState("");
-
-  useEffect(() => {
-    async function fetchTags() {
-      try {
-        const response = await axios.get(BASE_API_URL);
-        setTags(response.data.results); //have to specify want the results array part of response data
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }
-
-    fetchTags();
-  }, []);
 
   async function handleDeleteTags(tag_id) {
     try {
@@ -102,7 +98,22 @@ export default function TagManagement() {
           </Table.Header>
 
           <Table.Body>
-            {tags.length > 0 ? (
+            {/* Loading state */}
+            {loading ? (
+              <Table.Row>
+                <Table.Cell colSpan={3} textAlign="center">
+                  <Spinner size="lg" color="purple.500" />
+                </Table.Cell>
+              </Table.Row>
+            ) : error ? (
+              // Error state
+              <Table.Row>
+                <Table.Cell colSpan={3} textAlign="center" color="red.500">
+                  {error}
+                </Table.Cell>
+              </Table.Row>
+            ) : tags.length > 0 ? (
+              // Normal tags list
               tags.map((tag) => (
                 <Table.Row key={tag.id}>
                   <Table.Cell>
@@ -117,7 +128,9 @@ export default function TagManagement() {
                       tag.title
                     )}
                   </Table.Cell>
+
                   <Table.Cell textAlign="center">0</Table.Cell>
+
                   <Table.Cell textAlign="center">
                     {editingID === tag.id ? (
                       <>
@@ -132,7 +145,7 @@ export default function TagManagement() {
                         <Button
                           size="xs"
                           bg="gray.400"
-                          marginLeft={"10px"}
+                          marginLeft="10px"
                           onClick={() => setEditingID(null)}
                         >
                           Cancel
@@ -151,7 +164,7 @@ export default function TagManagement() {
                         <Button
                           size="xs"
                           bg="red.600"
-                          marginLeft={"10px"}
+                          marginLeft="10px"
                           onClick={() => handleDeleteTags(tag.id)}
                         >
                           Delete
@@ -162,6 +175,7 @@ export default function TagManagement() {
                 </Table.Row>
               ))
             ) : (
+              // Empty state
               <Table.Row>
                 <Table.Cell colSpan={3} textAlign="center">
                   No tags found!
