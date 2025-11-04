@@ -24,7 +24,6 @@ import axios from "axios";
 import useTags from "../hooks/useTags";
 
 export default function UploadAssetModal() {
-
   // state variables to store asset details
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -55,6 +54,7 @@ export default function UploadAssetModal() {
     assetFormData.append("file_type", file_type.ext); // file_type (.mime can be read as well)
     assetFormData.append("file_size", file_size); // file_size (in MB)
     assetFormData.append("url", file);
+    assetFormData.append("tags", selectedTag);
 
     // POST method to upload asset (file) to backend endpoint
     try {
@@ -81,14 +81,6 @@ export default function UploadAssetModal() {
         return [...prevSelected, tag_id];
       }
     });
-  }
-
-  //===========
-  //asset tags
-  //===========
-
-  async function handleSaveAssetTag(asset_id, tag_id){
-    return;
   }
 
   return (
