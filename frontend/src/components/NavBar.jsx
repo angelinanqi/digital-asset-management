@@ -41,6 +41,8 @@ export default function NavBar({ items = [] }) {
         <Image src={Logo.src ?? Logo} alt="logo" h="40px" w="auto" />
 
         {/*center - search bar*/}
+        {/* NOTE: BRYAN EDIT HERE */}
+
         <Flex flex="1" justify="center">
           <InputGroup endElement={<LuSearch />} width="1/2">
             <Input

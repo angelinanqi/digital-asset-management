@@ -1,6 +1,7 @@
 'use client';
 
-import { Avatar, Button, Card, Flex } from '@chakra-ui/react';
+import { Avatar, Button, Card, Flex, Input, InputGroup } from '@chakra-ui/react';
+import { LuSearch } from 'react-icons/lu';
 import { useState, useEffect } from 'react';
 import PreviewAssetModal from './previews/PreviewAssetModal';
 import EditAssetModal from './EditAssetModal';
@@ -11,20 +12,11 @@ export default function AssetCard() {
     // Stores list of each asset and its details
     const [assets, setAssets] = useState([]);
 
+    // TEST: Stores the search keyword 
+    const [searchKeyword, setSearchKeyword] = useState('');
+
     // Handler to download asset files
     const { download } = useDownloader();
-
-    const getAssets = async () => {
-        // Axios GET method: Retrieves asset and its details
-        const response = await axios.get('http://127.0.0.1:8000/assets/');
-
-        // Used for debugging purposes - Need to be removed
-        console.log('response', response.data.results);
-
-        // Store fetched data from GET method into the 'assets' array
-        // Note: Must see how response data is structured to access it
-        setAssets(response.data.results);
-    };
 
     const deleteAsset = async (asset_id) => {
         // Axios DELETE method: Delete an asset based on its ID
@@ -34,9 +26,21 @@ export default function AssetCard() {
     useEffect(() => {
         // Call this function to retrieve all assets
         // Note: Using [] to only call getAssets() once for each render
+
+        const getAssets = async () => {
+            const url = searchKeyword 
+                ? 'http://127.0.0.1:8000/assets/?search=' + searchKeyword
+                : 'http://127.0.0.1:8000/assets/'
+
+            const response = await axios.get(url);
+
+            setAssets(response.data.results);
+
+        }
+
         getAssets();
 
-    }, []);
+    }, [searchKeyword]);
 
     // JSX and Chakra UI components
     return (
@@ -44,7 +48,26 @@ export default function AssetCard() {
             <br />
             {/* Temporary header for the Digital Assets segment */}
             <h1>Digital Assets</h1>
+
             <br />
+
+            <Flex flex="1" justify="center">
+                      <InputGroup endElement={<LuSearch />} width="1/2">
+                        <Input
+                          color="black"
+                          variant="outline"
+                          borderColor="gray.700/20"
+                          placeholder="What are you looking for?"
+                          value={searchKeyword}
+                          onChange={(e) => setSearchKeyword(e.target.value)}
+                        />
+                      </InputGroup>
+                    </Flex>
+            
+            <br/>
+
+            <h1>{searchKeyword}</h1>
+
 
             {/* Loop through the 'assets' array based on ID */}
             <Flex gap={31} direction='row' wrap='wrap'>
