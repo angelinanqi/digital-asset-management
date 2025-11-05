@@ -1,6 +1,17 @@
 "use client";
 
-import { Avatar, Button, Card, Flex, Input, InputGroup } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Card,
+  Flex,
+  Input,
+  InputGroup,
+  Box,
+  Center,
+  Image,
+  Stack,
+} from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu";
 import { useState, useEffect } from "react";
 import PreviewAssetModal from "./previews/PreviewAssetModal";
