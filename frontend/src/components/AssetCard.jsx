@@ -1,6 +1,15 @@
 'use client';
 
-import { Avatar, Button, Card, Flex, Input, InputGroup } from '@chakra-ui/react';
+import {   Avatar,
+  Button,
+  Card,
+  Flex,
+  Input,
+  InputGroup,
+  Box,
+  Center,
+  Image,
+  Stack, } from '@chakra-ui/react';
 import { LuSearch } from 'react-icons/lu';
 import { useState, useEffect } from 'react';
 import PreviewAssetModal from './previews/PreviewAssetModal';
@@ -18,6 +27,21 @@ export default function AssetCard() {
     // Handler to download asset files
     const { download } = useDownloader();
 
+    const getAssets = async () => {
+        // Axios GET method: Retrieves asset and its details
+        const response = await axios.get('http://127.0.0.1:8000/assets/');
+
+        // Used for debugging purposes - Need to be removed
+        console.log('response', response.data.results);
+
+        // Store fetched data from GET method into the 'assets' array
+        setAssets(response.data.results);
+    };
+
+    useEffect(() => {
+        // Call this function to retrieve all assets
+        getAssets();
+    }, []);
     const deleteAsset = async (asset_id) => {
         // Axios DELETE method: Delete an asset based on its ID
         await axios.delete('http://127.0.0.1:8000/assets/' + asset_id + '/');
@@ -42,15 +66,19 @@ export default function AssetCard() {
 
     }, [searchKeyword]);
 
-    // JSX and Chakra UI components
     return (
         <div>
+            <script
+                type="module"
+                src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
+            ></script>
+
             <br />
-            {/* Temporary header for the Digital Assets segment */}
             <h1>Digital Assets</h1>
 
             <br />
 
+            <Flex gap={31} direction="row" wrap="wrap">
             <Flex flex="1" justify="center">
                       <InputGroup endElement={<LuSearch />} width="1/2">
                         <Input
@@ -75,56 +103,75 @@ export default function AssetCard() {
                     return (
                         <Card.Root
                             key={asset.id}
-                            width='320px'
-                            variant='elevated'
-                            colorPalette='purple'
+                            width="320px"
+                            variant="elevated"
+                            colorPalette="purple"
                         >
-                            <Card.Body gap='2' colorPalette='gray'>
-                                {/* Using Flex to display preview, asset name, and size */}
-                                <Flex gap='4'>
-                                    {/* Display preview (image) of asset */}
-                                    <Avatar.Root size='xl' shape='rounded'>
-                                        <Avatar.Image src={asset.url} />
-                                    </Avatar.Root>
+                            <Card.Body gap="2" colorPalette="gray">
 
-                                    {/* Display asset name and size (in MB) */}
-                                    <Flex direction='column'>
+                                <Stack>
+                                    <Box h='140px'>
+                                        {(asset.file_type === 'png' || asset.file_type === 'jpg') && (
+
+                                            <Center>
+                                                <Image
+                                                    src={asset.url}
+                                                    w="full"
+                                                    maxH="140px"
+                                                    alt={asset.name}
+                                                    borderRadius="10px"
+                                                />
+
+                                            </Center>
+
+                                        )}
+
+                                        {asset.file_type === 'glb' && (
+                                            <model-viewer
+                                                alt={asset.name}
+                                                src={asset.url}
+                                                shadow-intensity="1"
+                                                camera-controls
+                                                touch-action="pan-y"
+                                            />
+                                        )}
+                                    </Box>
+
+                                    <Box>
                                         <Card.Title>{asset.name}</Card.Title>
-                                        <p>{asset.file_size} MB</p>
-                                    </Flex>
-                                </Flex>
+                                        <p>{Number(asset.file_size).toFixed(2)} MB</p>
+                                        <Card.Description>{asset.description}</Card.Description>
 
-                                {/* Display asset description */}
-                                <Card.Description>{asset.description}</Card.Description>
+                                    </Box>
 
-                                {/* Display other asset details (uploaded_by and upload_datetime) */}
-                                <Flex direction='column'>
+                                </Stack>
+
+                                <Flex direction="column">
                                     <Card.Description>
                                         <b>Uploaded By:</b> {asset.uploaded_by}
                                     </Card.Description>
                                     <Card.Description>
-                                        <b>Datetime: </b> {asset.upload_datetime}
+                                        <b>Datetime:</b> {asset.upload_datetime}
                                     </Card.Description>
                                 </Flex>
                             </Card.Body>
 
-                            {/* Asset card footer with buttons and its dialogs */}
-                            <Card.Footer justifyContent='flex-end'>
+                            <Card.Footer justifyContent="flex-end">
+                                <PreviewAssetModal asset={asset} />
 
-                                {/* NOTE: INSERT PREVIEW BUTTON HERE */}
-                                <PreviewAssetModal asset={asset}/>
-
-                                {/* Can insert more features here (Button) */}
                                 <Button
-                                    variant='outline'
-                                    onClick={() => download(asset.url, asset.name + '.' + asset.file_type)}
+                                    variant="outline"
+                                    onClick={() =>
+                                        download(
+                                            asset.url,
+                                            asset.name + '.' + asset.file_type
+                                        )
+                                    }
                                 >
                                     Download
                                 </Button>
 
-                                {/* Button: Edit asset (name and description) */}
-                                <EditAssetModal asset={asset}/>
-                                
+                                <EditAssetModal asset={asset} />
                             </Card.Footer>
                         </Card.Root>
                     );
