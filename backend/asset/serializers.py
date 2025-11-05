@@ -1,5 +1,6 @@
-from .models import Asset, Tags, AssetTags
+from .models import Asset, Tags
 from rest_framework import serializers
+import uuid
 
 
 class AssetSerializer(serializers.ModelSerializer):
@@ -13,8 +14,9 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tags
         fields = ["id", "title"]
 
-
-class AssetTagSerializer(serializers.ModelSerializer):
+class UsageCountSerializer(serializers.ModelSerializer):
+    usage_count = serializers.IntegerField(read_only=True)
     class Meta:
-        model = AssetTags
-        fields = ["asset", "tag"]
+        model = Tags
+        fields = ["id", "title", "usage_count"]
+        
