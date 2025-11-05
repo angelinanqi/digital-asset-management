@@ -1,92 +1,138 @@
-'use client';
+"use client";
 
-import { Box, Button, CloseButton, Dialog, Field, Input, Portal, Stack, Textarea, Icon } from '@chakra-ui/react';
-import { useState } from 'react';
-import axios from 'axios';
+import { Button, CloseButton, Dialog, Field, Input, Portal, Stack, Textarea } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import useTags from "../hooks/useTags";
+import AssetTag from "./AssetTag.jsx";
 
 export default function EditAssetModal({ asset }) {
-    // State variables to store uploaded asset details
-    const [name, setName] = useState(asset.name);
-    const [description, setDescription] = useState(asset.description);
+  const BASE_API_URL = "http://127.0.0.1:8000/assets/";
 
-    async function handleAssetFileEdit() {
-        // Establish existing key-value pairs for asset
-        const assetFormData = new FormData();
+  // State variables to store uploaded asset details
+  const [name, setName] = useState(asset.name);
+  const [description, setDescription] = useState(asset.description);
 
-        assetFormData.append('name', name);
-        assetFormData.append('description', description);
+  // state variable to store tag
+  const { tags, loading, error } = useTags();
+  const [selectedTag, setSelectedTag] = useState([]);
 
-        // PATCH method to update asset name and description
-        try {
-            await axios.patch('http://127.0.0.1:8000/assets/' + asset.id + '/', assetFormData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-        } catch (err) {
-            console.log(err);
-        }
+  //get the already assigned tags for each asset to load selected tag ui in tags area
+  async function fetchSelectedTags() {
+    try {
+      const response = await axios.get(BASE_API_URL + asset.id + "/");
+      setSelectedTag(response.data.tags || []);
+    } catch (err) {
+      console.log(err);
     }
+  }
 
-    return (
-        <>
-            <Dialog.Root>
-                <Dialog.Trigger asChild>
-                    <Button variant='outline'>Edit</Button>
-                </Dialog.Trigger>
+  async function handleTagSelect(tag_id) {
+    setSelectedTag((prevSelected) => {
+      if (prevSelected.includes(tag_id)) {
+        // if already selected, remove it
+        return prevSelected.filter((id) => id !== tag_id);
+      } else {
+        // otherwise add it
+        return [...prevSelected, tag_id];
+      }
+    });
+  }
 
-                <Portal>
-                    <Dialog.Backdrop />
+  async function handleAssetFileEdit() {
+    // Establish existing key-value pairs for asset
+    const assetFormData = new FormData();
 
-                    <Dialog.Positioner>
-                        <Dialog.Content>
-                            <Dialog.Header>
-                                <Dialog.Title>Edit Asset: {asset.name}</Dialog.Title>
-                            </Dialog.Header>
+    assetFormData.append("name", name);
+    assetFormData.append("description", description);
+    selectedTag.forEach((tag_id) => {
+      assetFormData.append("tags", tag_id);
+    });
 
-                            <Dialog.Body pb='4'>
-                                <Stack gap='4'>
-                                    {/* Name field */}
-                                    <Field.Root>
-                                        <Field.Label>Name</Field.Label>
-                                        <Input
-                                            placeholder='Name'
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                        />
-                                    </Field.Root>
+    // PATCH method to update asset name and description
+    try {
+      await axios.patch(BASE_API_URL + asset.id + "/", assetFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-                                    {/* Description field */}
-                                    <Field.Root>
-                                        <Field.Label>Description</Field.Label>
-                                        <Textarea
-                                            placeholder='Description'
-                                            value={description}
-                                            onChange={(e) => setDescription(e.target.value)}
-                                            height='200px'
-                                        />
-                                    </Field.Root>
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchSelectedTags();
+  }, []);
 
-                                    {/* Add tags here */}
+  return (
+    <>
+      <Dialog.Root>
+        <Dialog.Trigger asChild>
+          <Button variant="outline">Edit</Button>
+        </Dialog.Trigger>
 
-                                </Stack>
-                            </Dialog.Body>
-                            <Dialog.CloseTrigger asChild>
-                                <CloseButton size='sm' />
-                            </Dialog.CloseTrigger>
+        <Portal>
+          <Dialog.Backdrop />
 
-                            <Dialog.Footer>
-                                <Dialog.ActionTrigger asChild>
-                                    <Button variant='outline'>Cancel</Button>
-                                </Dialog.ActionTrigger>
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Edit Asset: {asset.name}</Dialog.Title>
+              </Dialog.Header>
 
-                                <Dialog.ActionTrigger asChild>
-                                    <Button onClick={handleAssetFileEdit}>Edit</Button>
-                                </Dialog.ActionTrigger>
+              <Dialog.Body pb="4">
+                <Stack gap="4">
+                  {/* Name field */}
+                  <Field.Root>
+                    <Field.Label>Name</Field.Label>
+                    <Input
+                      placeholder="Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </Field.Root>
 
-                            </Dialog.Footer>
-                        </Dialog.Content>
-                    </Dialog.Positioner>
-                </Portal>
-            </Dialog.Root>
-        </>
-    );
+                  {/* Description field */}
+                  <Field.Root>
+                    <Field.Label>Description</Field.Label>
+                    <Textarea
+                      placeholder="Description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      height="200px"
+                    />
+                  </Field.Root>
+
+                  {/* tags */}
+                  <Field.Root>
+                    <Field.Label>Tags</Field.Label>
+                    <AssetTag
+                      tags={tags}
+                      loading={loading}
+                      error={error}
+                      selectedTags={selectedTag}
+                      onSelectTag={handleTagSelect}
+                    />
+                  </Field.Root>
+                </Stack>
+              </Dialog.Body>
+              <Dialog.CloseTrigger asChild>
+                <CloseButton size="sm" />
+              </Dialog.CloseTrigger>
+
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button variant="outline">Cancel</Button>
+                </Dialog.ActionTrigger>
+
+                <Dialog.ActionTrigger asChild>
+                  <Button onClick={handleAssetFileEdit}>Save</Button>
+                </Dialog.ActionTrigger>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+    </>
+  );
 }

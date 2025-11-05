@@ -24,5 +24,5 @@ export default function useTags() {
     fetchTags();
   }, []);
 
-  return {tags, loading, error, setTags};
+  return {tags, loading, error };
 }
