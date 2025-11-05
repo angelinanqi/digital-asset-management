@@ -51,7 +51,7 @@ class Asset(models.Model):
     file_type = models.CharField(max_length=100)
     file_size = models.FloatField()
     url = models.FileField(upload_to="uploads/")
-    tags = models.ManyToManyField(Tags)
+    tags = models.ManyToManyField(Tags, related_name="assets")
 
     def save(self, *args, **kwargs):
         if not self.code:
