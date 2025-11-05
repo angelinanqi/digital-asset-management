@@ -1,29 +1,16 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  CloseButton,
-  Dialog,
-  Field,
-  Input,
-  Portal,
-  Stack,
-  FileUpload,
-  Textarea,
-  Icon,
-  Tag,
-  Flex,
-  Spinner,
-} from "@chakra-ui/react";
+
+import { Box, Button, CloseButton, Dialog, Field, Input, Portal, Stack, FileUpload, Textarea, Icon } from "@chakra-ui/react";
 import { LuUpload } from "react-icons/lu";
-import { HiPlus } from "react-icons/hi";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { fileTypeFromBlob } from "file-type";
 import axios from "axios";
 import useTags from "../hooks/useTags";
+import AssetTag from "./AssetTag.jsx";
 
 export default function UploadAssetModal() {
+  console.log("AssetTag", AssetTag);
   // state variables to store asset details
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -32,6 +19,18 @@ export default function UploadAssetModal() {
   // state variable to store tag
   const { tags, loading, error } = useTags();
   const [selectedTag, setSelectedTag] = useState([]);
+
+  async function handleTagSelect(tag_id) {
+    setSelectedTag((prevSelected) => {
+      if (prevSelected.includes(tag_id)) {
+        // if already selected, remove it
+        return prevSelected.filter((id) => id !== tag_id);
+      } else {
+        // otherwise add it
+        return [...prevSelected, tag_id];
+      }
+    });
+  }
 
   async function handleAssetFileUpload() {
     // validate to ensure file exists
@@ -54,7 +53,9 @@ export default function UploadAssetModal() {
     assetFormData.append("file_type", file_type.ext); // file_type (.mime can be read as well)
     assetFormData.append("file_size", file_size); // file_size (in MB)
     assetFormData.append("url", file);
-    assetFormData.append("tags", selectedTag);
+    selectedTag.forEach((tag_id) => {
+      assetFormData.append("tags", tag_id);
+    });
 
     // POST method to upload asset (file) to backend endpoint
     try {
@@ -65,22 +66,6 @@ export default function UploadAssetModal() {
       // Does not do anything for now.
       console.log("error", err);
     }
-  }
-
-  //==============
-  //     tags
-  //==============
-
-  async function handleTagSelect(tag_id) {
-    setSelectedTag((prevSelected) => {
-      if (prevSelected.includes(tag_id)) {
-        // if already selected, remove it
-        return prevSelected.filter((id) => id !== tag_id);
-      } else {
-        // otherwise add it
-        return [...prevSelected, tag_id];
-      }
-    });
   }
 
   return (
@@ -143,40 +128,13 @@ export default function UploadAssetModal() {
                 {/* Add tags here */}
                 <Field.Root>
                   <Field.Label>Tags</Field.Label>
-
-                  <Flex gap="1" wrap="wrap">
-                    {loading ? (
-                      <Spinner size="lg" color="purple.500" />
-                    ) : error ? (
-                      <p>{error}</p>
-                    ) : tags.length > 0 ? (
-                      tags.map((tag) => {
-                        const isSelected = selectedTag.includes(tag.id);
-                        return (
-                          <Tag.Root
-                            key={tag.id}
-                            size="lg"
-                            bg={isSelected ? "purple.500" : "gray.100"}
-                            variant={isSelected ? "solid" : "subtle"}
-                            _hover={{ cursor: "pointer" }}
-                            onClick={() => handleTagSelect(tag.id)}
-                            display="inline-flex"
-                            mr="2"
-                            mb="2"
-                          >
-                            {!isSelected && (
-                              <Tag.StartElement>
-                                <HiPlus />
-                              </Tag.StartElement>
-                            )}
-                            <Tag.Label>{tag.title}</Tag.Label>
-                          </Tag.Root>
-                        );
-                      })
-                    ) : (
-                      <p>No tags found!</p>
-                    )}
-                  </Flex>
+                  <AssetTag
+                    tags={tags}
+                    loading={loading}
+                    error={error}
+                    selectedTags={selectedTag}
+                    onSelectTag={handleTagSelect}
+                  />
                 </Field.Root>
               </Stack>
             </Dialog.Body>
