@@ -1,6 +1,15 @@
 "use client";
 
-import { Button, CloseButton, Dialog, Field, Input, Portal, Stack, Textarea } from "@chakra-ui/react";
+import {
+  Button,
+  CloseButton,
+  Dialog,
+  Field,
+  Input,
+  Portal,
+  Stack,
+  Textarea,
+} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import useTags from "../hooks/useTags";
@@ -27,6 +36,7 @@ export default function EditAssetModal({ asset }) {
     }
   }
 
+  //called by AssetTag (onSelectTag) and will return the array of tag ids
   async function handleTagSelect(tag_id) {
     setSelectedTag((prevSelected) => {
       if (prevSelected.includes(tag_id)) {
@@ -45,9 +55,15 @@ export default function EditAssetModal({ asset }) {
 
     assetFormData.append("name", name);
     assetFormData.append("description", description);
-    selectedTag.forEach((tag_id) => {
-      assetFormData.append("tags", tag_id);
-    });
+
+    //cannot make existing tags array to null due to m2m field in backend, this is a workaround
+    if (selectedTag.length === 0) {
+      await axios.patch("http://127.0.0.1:8000/clear-tags/" + asset.id + "/");
+    } else {
+      selectedTag.forEach((tag_id) => { //tag id set in AssetTag componenet
+        assetFormData.append("tags", tag_id);
+      });
+    }
 
     // PATCH method to update asset name and description
     try {

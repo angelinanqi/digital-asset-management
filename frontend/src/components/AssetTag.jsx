@@ -2,6 +2,9 @@ import { Flex, Spinner, Tag } from "@chakra-ui/react";
 import { HiPlus } from "react-icons/hi";
 
 export default function AssetTag({ tags, loading, error, selectedTags, onSelectTag }) {
+  //tags: full list of tags in dtbs to render all tag selections
+  //selectedTags: list of tags already assigned to the asset to render ui indicating is selected
+  //onSelectTag: list of tags, which includes new changes as to which tag is selected
   return (
     <Flex gap="2" wrap="wrap">
       {loading ? (
