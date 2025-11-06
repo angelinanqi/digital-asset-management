@@ -25,7 +25,14 @@ SECRET_KEY = 'django-insecure-)5kbro77x+-8d90a=r!qf_k6f9n7(wa_&micppc57=&nf#lmi3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    # For laptop access (Backend)
+    '127.0.0.1', 
+
+    # For iPhone access (Backend)
+    '192.168.0.216',
+    
+]
 
 
 # Application definition
@@ -39,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'django_filters',
     'asset',
 ]
 
@@ -130,15 +138,21 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 40
 }
 
 CORS_ALLOWED_ORIGINS = [
+    # For laptop access (Frontend)
     'http://localhost:3000',
+
+    # For iPhone access (Frontend)
+    'http://192.168.0.216:3000',
 ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 X_FRAME_OPTIONS = 'ALLOW-FROM http://localhost:3000'
+

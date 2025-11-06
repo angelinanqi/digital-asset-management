@@ -1,46 +1,26 @@
-import { Box, Button, CloseButton, Dialog, Grid, GridItem, NumberInput, Portal, Stack, HStack } from '@chakra-ui/react';
+import { Accordion, Box, Button, Card, CloseButton, Dialog, Grid, GridItem, NumberInput, Portal, Span } from '@chakra-ui/react';
 import { useState } from 'react';
+
+import { hsvaToHex } from '@uiw/color-convert';
+import Sketch from '@uiw/react-color-sketch';
+
+import PreviewAssetCard from './PreviewAssetCard';
+
 import PreviewImageAsset from './PreviewImageAsset';
 import PreviewVideoAsset from './PreviewVideoAsset';
-import Preview3DAsset from './Preview3DAsset';
-import useDownloader from 'react-use-downloader';
-import EditAssetModal from '../EditAssetModal';
-import axios from 'axios';
+
 
 export default function PreviewAssetModal({ asset }) {
+    const [exposure, setExposure] = useState(1);
+    const [shadowIntensity, setShadowIntensity] = useState(1);
+    const [shadowSoftness, setShadowSoftness] = useState(1);
 
-    /*
-    State variable handling for 3D models (assets)
-    Handler to control and adjust light intensity of 3D models
-
-    Note: Recommended values in range (0 - 10)
-    */
-    const [lightIntensity, setLightIntensity] = useState(1);
-
-    // Handler to adjust wheel scroll sensitivity
-    const [wheelPrecision, setWheelPrecision] = useState(20);
-
-    /* 
-    State variables for handling background RGBA 
-    
-    Note: Default values have been set
-    */
-    const [rComponent, setRComponent] = useState(0);
-    const [gComponent, setGComponent] = useState(0);
-    const [bComponent, setBComponent] = useState(0);
-    const [aComponent, setAComponent] = useState(0.1);
-
-    // Handler to download asset files
-    const { download } = useDownloader();
-
-    const deleteAsset = async (asset_id) => {
-        // Axios DELETE method: Delete an asset based on its ID
-        await axios.delete('http://127.0.0.1:8000/assets/' + asset_id + '/');
-    }
+    const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 0 });
+    const [disableAlpha, setDisableAlpha] = useState(false);
 
     return (
         <>
-            {/* Button: View - > Opens */}
+            {/* Button: Preview - > Opens */}
             <Dialog.Root size='full' placement='center'>
                 <Dialog.Trigger asChild>
                     <Button variant='outline'>Preview</Button>
@@ -56,159 +36,143 @@ export default function PreviewAssetModal({ asset }) {
 
                                 {/* Refactor this part (New UI) */}
 
-                                <Grid templateColumns='repeat(4, 2fr )' gap='6'>
+                                <Grid templateColumns='repeat(2, 1fr)' gap='6'>
 
-                                    {/* Display Asset */}
-                                    <GridItem colSpan={3}>
-                                        <Box h='20'>
+                                    {/* Item 1 */}
+                                    <GridItem>
 
-                                            {asset.file_type === 'png' && <PreviewImageAsset assetURL={asset.url} />}
-                                            {asset.file_type === 'jpg' && <PreviewImageAsset assetURL={asset.url} />}
-                                            {asset.file_type === 'mp4' && <PreviewVideoAsset assetName={asset.name} assetURL={asset.url} />}
+                                        {/* Display 3D models */}
+                                        {asset.file_type === 'glb' &&
+                                            <model-viewer
+                                                alt={asset.name}
+                                                src={asset.url}
+                                                shadow-intensity={shadowIntensity}
+                                                shadow-softness={shadowSoftness}
+                                                exposure={exposure}
+                                                camera-controls
+                                                auto-rotate
+                                                touch-action="pan-y"
+                                                environment-image="neutral"
 
-                                            {asset.file_type === 'glb' &&
-                                                <Preview3DAsset
-                                                    assetURL={asset.url}
-                                                    lightIntensity={lightIntensity}
-                                                    wheelPrecision={wheelPrecision}
-                                                    rComponent={rComponent}
-                                                    gComponent={gComponent}
-                                                    bComponent={bComponent}
-                                                    aComponent={aComponent}
-                                                />}
+                                                style={{
+                                                    width: '700px',
+                                                    height: "600px",
+                                                    borderRadius: "12px",
+                                                    backgroundColor: hsvaToHex(hsva)
+                                                }}
+                                            />
+                                        }
 
-                                        </Box>
+                                        {/* Display png and jpg images */}
+                                        {(asset.file_type === 'png' || asset.file_type === 'jpg') && 
+                                            <PreviewImageAsset assetURL={asset.url}/>
+                                        }
+
+                                        
+                                        {/* Display mp4 */}
+                                        {asset.file_type === 'mp4' && 
+                                            <PreviewVideoAsset assetURL={asset.url}/>
+                                        }
+
                                     </GridItem>
 
-                                    {/* Display Asset Details */}
-                                    <GridItem colSpan={1}>
-                                        <Box h='20'>
-                                            <Dialog.Title>Asset Details</Dialog.Title>
+                                    {/* Item 2 */}
+                                    <GridItem>
+                                        <PreviewAssetCard asset={asset} /> <br />
 
-                                            <Dialog.Description><b>Model Code:</b> {asset.code}</Dialog.Description>
-                                            <Dialog.Description><b>Name:</b> {asset.name}</Dialog.Description>
-                                            <Dialog.Description><b>Description:</b> {asset.description}</Dialog.Description>
-                                            <Dialog.Description><b>Upload Datetime:</b> {asset.upload_datetime}</Dialog.Description>
-                                            <Dialog.Description><b>Uploaded By:</b> {asset.uploaded_by}</Dialog.Description>
-                                            <Dialog.Description><b>File Type:</b> {asset.file_type}</Dialog.Description>
-                                            <Dialog.Description><b>File Size:</b> {asset.file_size} MB</Dialog.Description>
+                                        {/* Only for 3D models (glb) */}
+                                        <Accordion.Root collapsible size='sm'>
+                                            <Accordion.Item value='advanced'>
+                                                <Accordion.ItemTrigger>
+                                                    <Span flex='1'>Advanced Options</Span>
+                                                </Accordion.ItemTrigger>
 
-                                            <br />
+                                                <Accordion.ItemContent>
+                                                    <Accordion.ItemBody>
 
-                                            <Stack>
-                                                <Button
-                                                    variant='outline'
-                                                    onClick={() => download(asset.url, asset.name + '.' + asset.file_type)}
-                                                >
-                                                    Download
+                                                        <Grid templateColumns='repeat(2, 1fr)' gap='6'>
 
-                                                </Button>
+                                                            {/* Card for Item 1 */}
+                                                            <Card.Root>
+                                                                <Card.Body>
 
-                                                {/* Button: Edit asset (name and description) */}
-                                                <EditAssetModal asset={asset} />
+                                                                    {/* Item 1 */}
+                                                                    <GridItem>
+                                                                        <Dialog.Description>Exposure</Dialog.Description> <br />
+                                                                        <NumberInput.Root
+                                                                            width='200px'
+                                                                            value={exposure}
+                                                                            onValueChange={(e) => setExposure(e.value)}
+                                                                            min='0'
+                                                                            max='2'
+                                                                            step={0.01}
+                                                                            allowMouseWheel
+                                                                        >
+                                                                            <NumberInput.Control />
+                                                                            <NumberInput.Input />
+                                                                        </NumberInput.Root> <br />
+
+                                                                        <Dialog.Description>Shadow Intensity</Dialog.Description> <br />
+                                                                        <NumberInput.Root
+                                                                            width='200px'
+                                                                            value={shadowIntensity}
+                                                                            onValueChange={(e) => setShadowIntensity(e.value)}
+                                                                            min='0'
+                                                                            max='2'
+                                                                            step={0.01}
+                                                                            allowMouseWheel
+                                                                        >
+                                                                            <NumberInput.Control />
+                                                                            <NumberInput.Input />
+                                                                        </NumberInput.Root> <br />
+
+                                                                        <Dialog.Description>Shadow Softness</Dialog.Description> <br />
+                                                                        <NumberInput.Root
+                                                                            width='200px'
+                                                                            value={shadowSoftness}
+                                                                            onValueChange={(e) => setShadowSoftness(e.value)}
+                                                                            min='0'
+                                                                            max='1'
+                                                                            step={0.01}
+                                                                            allowMouseWheel
+                                                                        >
+                                                                            <NumberInput.Control />
+                                                                            <NumberInput.Input />
+                                                                        </NumberInput.Root> <br />
+
+                                                                    </GridItem>
 
 
-                                                <Button variant='outline'>Update</Button>
+                                                                </Card.Body>
+                                                            </Card.Root>
 
-                                                <Button
-                                                    variant='outline'
-                                                    onClick={() => deleteAsset(asset.id)}
-                                                >
-                                                    Delete
+                                                            {/* Card for Item 2 */}
+                                                            <Card.Root>
+                                                                <Card.Body>
+                                                                    {/* Item 2 */}
+                                                                    <GridItem>
+                                                                        <Dialog.Description>Background Color</Dialog.Description> <br />
 
-                                                </Button>
+                                                                        <Box display='flex' justifyContent='center'>
+                                                                            <Sketch
+                                                                            style={{ width: 380 }}
+                                                                            color={hsva}
+                                                                            disableAlpha={disableAlpha}
+                                                                            onChange={(color) => { setHsva(color.hsva) }}
+                                                                        />
+                                                                        </Box>
 
-                                            </Stack>
+                                                                    </GridItem>
 
-                                            <br />
+                                                                </Card.Body>
+                                                            </Card.Root>
 
-                                            {asset.file_type === 'glb' &&
-                                                <Stack>
-                                                    <Dialog.Title>Advanced Options</Dialog.Title>
+                                                        </Grid>
+                                                    </Accordion.ItemBody>
 
-                                                    {/* 3D Asset: Light Intensity */}
-                                                    <Dialog.Description><b>Light Intensity</b></Dialog.Description>
-                                                    <NumberInput.Root
-                                                        width='310px'
-                                                        value={lightIntensity}
-                                                        onValueChange={(e) => setLightIntensity(e.value)}
-                                                        step={0.1}
-                                                        allowMouseWheel
-                                                    >
-                                                        <NumberInput.Control />
-                                                        <NumberInput.Input />
-                                                    </NumberInput.Root>
-
-                                                    {/* 3D Asset: Wheel Precision */}
-                                                    <Dialog.Description><b>Wheel Precision</b></Dialog.Description>
-                                                    <NumberInput.Root
-                                                        width='310px'
-                                                        value={wheelPrecision}
-                                                        onValueChange={(e) => setWheelPrecision(e.value)}
-                                                        step={10}
-                                                        allowMouseWheel
-                                                    >
-                                                        <NumberInput.Control />
-                                                        <NumberInput.Input />
-                                                    </NumberInput.Root>
-
-                                                    <Dialog.Description><b>Adjust Background RGBA</b></Dialog.Description>
-                                                    <Grid templateColumns='repeat(4, 1fr)' gap='6'>
-                                                        <NumberInput.Root
-                                                            width='65px'
-                                                            value={rComponent}
-                                                            onValueChange={(e) => setRComponent(e.value)}
-                                                            step={0.1}
-                                                            min={0}
-                                                            max={1}
-                                                            allowMouseWheel
-                                                        >
-                                                            <NumberInput.Control />
-                                                            <NumberInput.Input />
-                                                        </NumberInput.Root>
-
-                                                        <NumberInput.Root
-                                                            width='65px'
-                                                            value={gComponent}
-                                                            onValueChange={(e) => setGComponent(e.value)}
-                                                            step={0.1}
-                                                            min={0}
-                                                            max={1}
-                                                            allowMouseWheel
-                                                        >
-                                                            <NumberInput.Control />
-                                                            <NumberInput.Input />
-                                                        </NumberInput.Root>
-
-                                                        <NumberInput.Root
-                                                            width='65px'
-                                                            value={bComponent}
-                                                            onValueChange={(e) => setBComponent(e.value)}
-                                                            step={0.1}
-                                                            min={0}
-                                                            max={1}
-                                                            allowMouseWheel
-                                                        >
-                                                            <NumberInput.Control />
-                                                            <NumberInput.Input />
-                                                        </NumberInput.Root>
-
-                                                        <NumberInput.Root
-                                                            width='65px'
-                                                            value={aComponent}
-                                                            onValueChange={(e) => setAComponent(e.value)}
-                                                            step={0.1}
-                                                            min={0}
-                                                            max={1}
-                                                            allowMouseWheel
-                                                        >
-                                                            <NumberInput.Control />
-                                                            <NumberInput.Input />
-                                                        </NumberInput.Root>
-                                                    </Grid>
-                                                </Stack>
-                                            }
-                                        </Box>
+                                                </Accordion.ItemContent>
+                                            </Accordion.Item>
+                                        </Accordion.Root>
                                     </GridItem>
                                 </Grid>
                             </Dialog.Body>
