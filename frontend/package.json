@@ -14,7 +14,7 @@
     "@chakra-ui/react": "^3.28.0",
     "@emotion/react": "^11.14.0",
     "@google/model-viewer": "^4.1.0",
-    "@reduxjs/toolkit": "^2.10.0",
+    "@reduxjs/toolkit": "^2.10.1",
     "@uiw/color-convert": "^2.9.2",
     "@uiw/react-color-sketch": "^2.9.2",
     "axios": "^1.13.1",
