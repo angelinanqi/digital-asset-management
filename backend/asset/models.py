@@ -27,6 +27,15 @@ class UniqueCodeGenerator(models.Model):
         return f"{prefix}-{suffix}"
 
 
+class Tags(models.Model):
+    """
+    Tags for assets.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=50, null=False, blank=False, unique=True)
+
+
 class Asset(models.Model):
     """
     Stores, handles, and holds asset data.
@@ -42,26 +51,9 @@ class Asset(models.Model):
     file_type = models.CharField(max_length=100)
     file_size = models.FloatField()
     url = models.FileField(upload_to="uploads/")
+    tags = models.ManyToManyField(Tags, related_name="assets")
 
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = UniqueCodeGenerator.generate_code(prefix="A")
         super().save(*args, **kwargs)
-
-
-class Tags(models.Model):
-    """
-    Tags for assets.
-    """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=50, null=False, blank=False, unique=True)
-
-
-class AssetTags(models.Model):
-    """
-    Connect assets with their respective tags.
-    Primary key uses composite key asset id and order id.
-    """
-    pk = models.CompositePrimaryKey("asset", "tag")
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tags, on_delete=models.CASCADE)
