@@ -36,3 +36,9 @@ def asset_usage_count(request):
     """
     data = Tags.objects.annotate(usage_count=Count("assets")).values("id","title","usage_count")
     return Response(data)
+
+@api_view(['PATCH'])
+def clear_all_tags(request, asset_id):
+    asset = Asset.objects.get(id=asset_id)
+    asset.tags.clear()
+    return Response()

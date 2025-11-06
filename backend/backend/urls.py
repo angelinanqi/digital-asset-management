@@ -6,7 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from asset import views as asset_views
-from asset.views import asset_usage_count
+from asset.views import asset_usage_count, clear_all_tags
 
 router = routers.DefaultRouter()
 router.register(r'assets', asset_views.AssetViewSet)
@@ -16,5 +16,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
-    path('tag-usage/', asset_usage_count, name="tag-usage")
+    path('tag-usage/', asset_usage_count, name="tag-usage"),
+    path("clear-tags/<uuid:asset_id>/", clear_all_tags),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
