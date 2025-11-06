@@ -25,7 +25,14 @@ SECRET_KEY = 'django-insecure-)5kbro77x+-8d90a=r!qf_k6f9n7(wa_&micppc57=&nf#lmi3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    # For laptop access (Backend)
+    '127.0.0.1', 
+
+    # For iPhone access (Backend)
+    '192.168.0.216',
+    
+]
 
 
 # Application definition
@@ -137,10 +144,15 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
+    # For laptop access (Frontend)
     'http://localhost:3000',
+
+    # For iPhone access (Frontend)
+    'http://192.168.0.216:3000',
 ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 X_FRAME_OPTIONS = 'ALLOW-FROM http://localhost:3000'
+

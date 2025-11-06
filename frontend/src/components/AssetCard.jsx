@@ -19,6 +19,8 @@ import EditAssetModal from "./EditAssetModal";
 import useDownloader from "react-use-downloader";
 import axios from "axios";
 
+import { useSelector } from 'react-redux';
+
 export default function AssetCard() {
   //endpoint
   const BASE_API_URL_TAGS = "http://127.0.0.1:8000/tags/";
@@ -27,11 +29,13 @@ export default function AssetCard() {
   //state var and setter
   const [assets, setAssets] = useState([]); // Stores list of each asset and its details
   const [assetTagMap, setAssetTagMap] = useState({});
-  const [searchKeyword, setSearchKeyword] = useState("");
 
-  //handlers
-  const { download } = useDownloader(); // Handler to download asset files
+  // get the keyword from searchbar
+  const keyword = useSelector((state) => state.search.keyword);
 
+  // Handler to download asset files
+  const { download } = useDownloader();
+  
   //tag methods
   //get the tag using id
   async function fetchAssetTags(tag_id) {
@@ -50,8 +54,8 @@ export default function AssetCard() {
   //useEffect
   useEffect(() => {
     const getAssets = async () => {
-      const url = searchKeyword
-        ? BASE_API_URL_ASSETS + "?search=" + searchKeyword
+      const url = keyword
+        ? BASE_API_URL_ASSETS + "?search=" + keyword
         : BASE_API_URL_ASSETS;
 
       const response = await axios.get(url);
@@ -60,8 +64,8 @@ export default function AssetCard() {
     };
     // Call this function to retrieve all assets
     getAssets(); //suppress error, should be no problem as can render properly. most likely strict mode ba
-  }, [searchKeyword]); // Note: Using [] to only call getAssets() once for each render
-
+  }, [keyword]); // Note: Using [] to only call getAssets() once for each render
+  
   useEffect(() => {
     async function loadAssets() {
       const response = await axios.get(BASE_API_URL_ASSETS);
@@ -92,6 +96,93 @@ export default function AssetCard() {
 
     loadAssets();
   }, []);
+ 
+    return (
+        <div>
+            <br />
+            <h1>Digital Assets</h1>
+            <br />
+
+            <Flex gap={31} direction="row" wrap="wrap">
+                {assets.map((asset) => {
+                    return (
+                        <Card.Root
+                            key={asset.id}
+                            width="320px"
+                            variant="elevated"
+                        >
+                            <Card.Body gap="2" colorPalette="gray">
+
+                                <Stack>
+                                    <Box h='140px'>
+                                        {(asset.file_type === 'png' || asset.file_type === 'jpg') && (
+
+                                            <Center>
+                                                <Image
+                                                    src={asset.url}
+                                                    w="full"
+                                                    maxH="140px"
+                                                    alt={asset.name}
+                                                    borderRadius="10px"
+                                                />
+
+                                            </Center>
+
+                                        )}
+
+                                        {asset.file_type === 'glb' && (
+                                            <model-viewer
+                                                alt={asset.name}
+                                                src={asset.url}
+                                                shadow-intensity="1"
+                                                camera-controls
+                                                touch-action="pan-y"
+                                            />
+                                        )}
+                                    </Box>
+
+                                    <Box>
+                                        <Card.Title>{asset.name}</Card.Title>
+                                        <p>{Number(asset.file_size).toFixed(2)} MB</p>
+                                        <Card.Description>{asset.description}</Card.Description>
+
+                                    </Box>
+
+                                </Stack>
+
+                                <Flex direction="column">
+                                    <Card.Description>
+                                        <b>Uploaded By:</b> {asset.uploaded_by}
+                                    </Card.Description>
+                                    <Card.Description>
+                                        <b>Datetime:</b> {asset.upload_datetime}
+                                    </Card.Description>
+                                </Flex>
+                            </Card.Body>
+
+                            <Card.Footer justifyContent="flex-end">
+                                <PreviewAssetModal asset={asset}/>
+
+                                <Button
+                                    variant="outline"
+                                    onClick={() =>
+                                        download(
+                                            asset.url,
+                                            asset.name + '.' + asset.file_type
+                                        )
+                                    }
+                                >
+                                    Download
+                                </Button>
+
+                                <EditAssetModal asset={asset} />
+                            </Card.Footer>
+                        </Card.Root>
+                    );
+                })}
+            </Flex>
+        </div>
+    );
 
   return (
     <div>

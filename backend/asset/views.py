@@ -13,6 +13,8 @@ class AssetViewSet(viewsets.ModelViewSet):
     queryset = Asset.objects.all()
     serializer_class = AssetSerializer
     parser_classes = [MultiPartParser]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'description', 'file_type']
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'upload_datetime', 'file_type']

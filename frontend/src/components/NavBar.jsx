@@ -1,7 +1,11 @@
+'use client';
+
 import { Image, Flex, Button, InputGroup, Input, Box } from "@chakra-ui/react";
 import Logo from "../assets/Logo.png";
 import { LuSearch } from "react-icons/lu";
 import Link from "next/link";
+
+import SearchBar from "./SearchBar";
 
 function NavItem({ label, href }) {
   return (
@@ -41,18 +45,7 @@ export default function NavBar({ items = [] }) {
         <Image src={Logo.src ?? Logo} alt="logo" h="40px" w="auto" />
 
         {/*center - search bar*/}
-        {/* NOTE: BRYAN EDIT HERE */}
-
-        <Flex flex="1" justify="center">
-          <InputGroup endElement={<LuSearch />} width="1/2">
-            <Input
-              color="black"
-              variant="outline"
-              borderColor="gray.700/20"
-              placeholder="What are you looking for?"
-            />
-          </InputGroup>
-        </Flex>
+        <SearchBar/>
 
         {/*right side - log in btn*/}
         <Button size="sm" bg="purple.600" color="white">

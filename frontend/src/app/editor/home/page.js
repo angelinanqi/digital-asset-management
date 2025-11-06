@@ -11,6 +11,7 @@ export default function EditorHome() {
         <UploadAssetModal />
 
         {/* Display asset in card format  */}
+        
         <AssetCard />
 
       </EditorLayout>
