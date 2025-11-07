@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Button, Card, Center, Flex, Image, Stack } from "@chakra-ui/react";
+import {Avatar, Button, Card, Flex, Input, InputGroup, Box, Center, Image, Stack } from "@chakra-ui/react";
+import { LuSearch } from "react-icons/lu";
 import { useState, useEffect } from "react";
 import FilterComponent from "./filters/FilterComponent";
 import PreviewAssetModal from "./previews/PreviewAssetModal";
@@ -8,7 +9,7 @@ import EditAssetModal from "./EditAssetModal";
 import useDownloader from "react-use-downloader";
 import axios from "axios";
 
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 
 export default function AssetCard() {
   //endpoint
@@ -19,10 +20,7 @@ export default function AssetCard() {
   const [assets, setAssets] = useState([]); // Stores list of each asset and its details
   const [assetTagMap, setAssetTagMap] = useState({});
 
-  // Stores the filter keyword (e.g. ?ordering=name)
-  const [filter, setFilter] = useState('');
-
-  // Get the keyword from searchbar
+  // get the keyword from searchbar
   const keyword = useSelector((state) => state.search.keyword);
 
   // Handler to download asset files
@@ -48,7 +46,7 @@ export default function AssetCard() {
     const getAssets = async () => {
       const url = keyword
         ? BASE_API_URL_ASSETS + "?search=" + keyword
-        : BASE_API_URL_ASSETS + filter;
+        : BASE_API_URL_ASSETS;
 
       const response = await axios.get(url);
 
@@ -56,7 +54,7 @@ export default function AssetCard() {
     };
     // Call this function to retrieve all assets
     getAssets(); //suppress error, should be no problem as can render properly. most likely strict mode ba
-  }, [keyword, filter]); // Note: Using [] to only call getAssets() once for each render
+  }, [keyword]); // Note: Using [] to only call getAssets() once for each render
 
   useEffect(() => {
     async function loadAssets() {
@@ -96,14 +94,7 @@ export default function AssetCard() {
       <br />
 
       {/* Filter Component */}
-      <Stack direction='row'>
-        <FilterComponent onChange={(e) => setFilter(e)}/> 
-        
-      </Stack>
-
-        <p>{filter}</p>
-      
-      <br/><br/>
+      <FilterComponent/> <br/><br/>
 
       <Flex gap={31} direction="row" wrap="wrap">
         {assets.map((asset) => {
@@ -147,7 +138,9 @@ export default function AssetCard() {
                     <Card.Title>{asset.name}</Card.Title>
                     <p>{Number(asset.file_size).toFixed(2)} MB</p>
                     <Card.Description>{asset.description}</Card.Description>
+
                   </Box>
+
                 </Stack>
 
                 <Flex direction="column">

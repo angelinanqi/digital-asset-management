@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Asset, Tags
 from .serializers import AssetSerializer, TagSerializer
 from rest_framework import viewsets, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -11,15 +12,24 @@ from .serializers import AssetSerializer
 
 # Create your views here.
 class AssetViewSet(viewsets.ModelViewSet):
-    queryset = Asset.objects.all()
+
+    # queryset initially returns all the asset objects
+    queryset = Asset.objects.all() 
     serializer_class = AssetSerializer
     parser_classes = [MultiPartParser]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["name", "description", "file_type"]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["name", "description", "upload_datetime", "file_type"]
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
 
+    # ordering assets based on specified fields
+    ordering_fields = ['name', 'upload_datetime']
+
+    # filter based on specified fields 
+    filterset_fields = ['upload_datetime', 'file_size']
+
+    # filter based on search keywords
+    search_fields = ['name', 'description', 'file_type']
+
+    
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
