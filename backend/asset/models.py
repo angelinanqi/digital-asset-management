@@ -52,6 +52,7 @@ class Asset(models.Model):
     file_size = models.FloatField()
     url = models.FileField(upload_to="uploads/")
     tags = models.ManyToManyField(Tags, related_name="assets", blank=True)
+    version_no = models.IntegerField(default=1, null=False)
 
     def save(self, *args, **kwargs):
         if not self.code:
