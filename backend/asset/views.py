@@ -60,6 +60,7 @@ def clear_all_tags(request, asset_id):
 def get_new_version_no(request, asset_code):
     """
     gets the correct version number for an updated version of an asset.
+    example: if asset currently has only 1 version, this method will return 2
     returns payload which has:
     - version_no
     """
