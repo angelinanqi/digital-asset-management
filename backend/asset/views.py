@@ -24,7 +24,7 @@ class AssetViewSet(viewsets.ModelViewSet):
     ordering_fields = ['name', 'upload_datetime']
 
     # filter based on specified fields 
-    filterset_fields = ['upload_datetime', 'file_size']
+    filterset_fields = ['tags']
 
     # filter based on search keywords
     search_fields = ['name', 'description', 'file_type']

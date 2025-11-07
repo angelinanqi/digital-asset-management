@@ -2,7 +2,7 @@
 
 import { Box, Button, Card, Center, Flex, Image, Stack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import FilterComponent from "./filters/FilterComponent";
+import BasicFilterComponent from "./filters/BasicFilterComponent";
 import TagFilterComponent from './filters/TagFilterComponent';
 import PreviewAssetModal from "./previews/PreviewAssetModal";
 import EditAssetModal from "./EditAssetModal";
@@ -22,6 +22,9 @@ export default function AssetCard() {
 
   // Stores the filter keyword (e.g. ?ordering=name)
   const [filter, setFilter] = useState('');
+
+  // Stores the tag filter
+  const [tagFilter, setTagFilter] = useState('');
 
   // Get the keyword from searchbar
   const keyword = useSelector((state) => state.search.keyword);
@@ -120,10 +123,10 @@ export default function AssetCard() {
       <Stack direction='row'>
 
         {/* Filter based on A-Z, Z-A, newest, and latest */}
-        <FilterComponent onChange={(e) => setFilter(e)} />
+        <BasicFilterComponent onChange={(e) => setFilter(e)} />
 
         {/* Filter based on existing tags */}
-        <TagFilterComponent />
+        <TagFilterComponent onChange={(e) => setTagFilter(e)} />
 
       </Stack>
 

@@ -66,7 +66,7 @@ export default function FilterComponent({ onChange }) {
 
                                 {/* Loop through the 'tags' array to display available tags */}
                                 {tags.map((tag) => (
-                                    <Menu.RadioItem key={tag.id} value={tag.title}>
+                                    <Menu.RadioItem key={tag.id} value={tag.id}>
                                         {tag.title}
                                         <Menu.ItemIndicator />
                                     </Menu.RadioItem>

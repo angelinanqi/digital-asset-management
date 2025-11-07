@@ -2,7 +2,7 @@
 
 import { Box, Button, Card, Center, Flex, Image, Stack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import FilterComponent from "./filters/FilterComponent";
+import BasicFilterComponent from "./filters/BasicFilterComponent";
 import TagFilterComponent from './filters/TagFilterComponent';
 import PreviewAssetModal from "./previews/PreviewAssetModal";
 import EditAssetModal from "./EditAssetModal";
@@ -13,15 +13,18 @@ import { useSelector } from "react-redux";
 
 export default function AssetCard() {
   //endpoint
-  const BASE_API_URL_TAGS = "http://127.0.0.1:8000/tags/";
   const BASE_API_URL_ASSETS = "http://127.0.0.1:8000/assets/";
-
+  const BASE_API_URL_TAGS = "http://127.0.0.1:8000/tags/";
+  
   //state var and setter
   const [assets, setAssets] = useState([]); // Stores list of each asset and its details
   const [assetTagMap, setAssetTagMap] = useState({});
 
   // Stores the filter keyword (e.g. ?ordering=name)
   const [filter, setFilter] = useState('');
+
+  // Stores the tag filter
+  const [tagFilter, setTagFilter] = useState('');
 
   // Get the keyword from searchbar
   const keyword = useSelector((state) => state.search.keyword);
@@ -54,14 +57,24 @@ export default function AssetCard() {
 
     const getAssets = async () => {
 
-      // Use ternary condition to set GET endpoint 
-      const url = keyword
-        ? BASE_API_URL_ASSETS + "?search=" + keyword // Updated based on searchbar
-        : BASE_API_URL_ASSETS + filter; // Updated based on chosen filter options
+      // Use URLSearchParams() to build the query after /?
+      let params = new URLSearchParams();
+
+      // Filter by name, description, and file_type
+      if (keyword) params.append('search', keyword);
+
+      // Filter by A-Z, Z-A, Newest, Oldest
+      if (filter) params.append('ordering', filter);
+
+      // Filter by available tags (If available)
+      if (tagFilter) params.append('tags', tagFilter);
+     
+      // Build the GET backend endpoint to retrieve filtered assets
+      const url = BASE_API_URL_ASSETS + '?' + params.toString();
 
       // Store the GET responses (results) under 'assets' array
       const response = await axios.get(url);
-
+      
       setAssets(response.data.results);
     };
 
@@ -75,7 +88,7 @@ export default function AssetCard() {
     Using [] to only call getAssets() once for each render
     Note: Must include keyword and filter since changes are dependent for rerender
     */
-  }, [keyword, filter]);
+  }, [keyword, filter, tagFilter]);
 
   useEffect(() => {
     async function loadAssets() {
@@ -120,10 +133,10 @@ export default function AssetCard() {
       <Stack direction='row'>
 
         {/* Filter based on A-Z, Z-A, newest, and latest */}
-        <FilterComponent onChange={(e) => setFilter(e)} />
+        <BasicFilterComponent onChange={(e) => setFilter(e)} />
 
         {/* Filter based on existing tags */}
-        <TagFilterComponent />
+        <TagFilterComponent onChange={(e) => setTagFilter(e)} />
 
       </Stack>
 

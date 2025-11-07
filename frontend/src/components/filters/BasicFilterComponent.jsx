@@ -4,14 +4,14 @@ import { Button, Menu, Portal } from '@chakra-ui/react';
 import { HiSortAscending } from 'react-icons/hi';
 import { useState } from 'react';
 
-export default function FilterComponent({ onChange }) {
+export default function BasicFilterComponent({ onChange }) {
     const [value, setValue] = useState('');
 
     const items = [
-        { label: 'A-Z', filterValue: '?ordering=name' },
-        { label: 'Z-A', filterValue: '?ordering=-name' },
-        { label: 'Newest', filterValue: '?ordering=-upload_datetime' },
-        { label: 'Oldest', filterValue: '?ordering=upload_datetime'}
+        { label: 'A-Z', filterValue: 'name' },
+        { label: 'Z-A', filterValue: '-name' },
+        { label: 'Newest', filterValue: '-upload_datetime' },
+        { label: 'Oldest', filterValue: 'upload_datetime'}
     ]
 
     return (
