@@ -5,21 +5,19 @@ import { IoPricetagsSharp } from 'react-icons/io5';
 import { useState } from 'react';
 
 export default function FilterComponent({ onChange }) {
-    const [value, setValue] = useState('asc');
+    const [value, setValue] = useState('');
 
     const items = [
-        { label: 'Ascending', filterValue: '?ordering=name' },
-        { label: 'Descending', filterValue: '?ordering=-name' },
-        { label: 'Newest', filterValue: '?ordering=-upload_datetime' },
-        { label: 'Oldest', filterValue: '?ordering=upload_datetime'}
+        { label: 'None', filterValue: '?ordering=name' },
     ]
 
     return (
         <>
+
         <Menu.Root>
             <Menu.Trigger asChild>
                 <Button variant='outline' size='sm'>
-                    <HiSortAscending/> Sort
+                    <IoPricetagsSharp /> Tags
                 </Button>
             </Menu.Trigger>
             <Portal>

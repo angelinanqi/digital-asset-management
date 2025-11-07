@@ -5,11 +5,11 @@ import { HiSortAscending } from 'react-icons/hi';
 import { useState } from 'react';
 
 export default function FilterComponent({ onChange }) {
-    const [value, setValue] = useState('asc');
+    const [value, setValue] = useState('');
 
     const items = [
-        { label: 'Ascending', filterValue: '?ordering=name' },
-        { label: 'Descending', filterValue: '?ordering=-name' },
+        { label: 'A-Z', filterValue: '?ordering=name' },
+        { label: 'Z-A', filterValue: '?ordering=-name' },
         { label: 'Newest', filterValue: '?ordering=-upload_datetime' },
         { label: 'Oldest', filterValue: '?ordering=upload_datetime'}
     ]
