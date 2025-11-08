@@ -2,6 +2,7 @@
 
 import { Box, Button, Card, Center, Flex, Image, Stack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import UploadAssetModal from "./UploadAssetModal";
 import BasicFilterComponent from "./filters/BasicFilterComponent";
 import TagFilterComponent from './filters/TagFilterComponent';
 import PreviewAssetModal from "./previews/PreviewAssetModal";
@@ -15,7 +16,7 @@ export default function AssetCard() {
   //endpoint
   const BASE_API_URL_ASSETS = "http://127.0.0.1:8000/assets/";
   const BASE_API_URL_TAGS = "http://127.0.0.1:8000/tags/";
-  
+
   //state var and setter
   const [assets, setAssets] = useState([]); // Stores list of each asset and its details
   const [assetTagMap, setAssetTagMap] = useState({});
@@ -68,13 +69,13 @@ export default function AssetCard() {
 
       // Filter by available tags (If available)
       if (tagFilter) params.append('tags', tagFilter);
-     
+
       // Build the GET backend endpoint to retrieve filtered assets
       const url = BASE_API_URL_ASSETS + '?' + params.toString();
 
       // Store the GET responses (results) under 'assets' array
       const response = await axios.get(url);
-      
+
       setAssets(response.data.results);
     };
 
@@ -125,16 +126,25 @@ export default function AssetCard() {
   return (
     <div>
 
-      {/* Display filter components */}
-      <Stack direction='row'>
+      {/* Display filter components and upload button*/}
+      <Flex gap='2' justify='space-between'>
 
         {/* Filter based on A-Z, Z-A, newest, and latest */}
-        <BasicFilterComponent onChange={(e) => setFilter(e)} />
+        <Box height='10'>
+          <BasicFilterComponent onChange={(e) => setFilter(e)} />
+        </Box>
 
         {/* Filter based on existing tags */}
-        <TagFilterComponent onChange={(e) => setTagFilter(e)} />
+        <Box height='10'>
+          <TagFilterComponent onChange={(e) => setTagFilter(e)} />
+        </Box>
 
-      </Stack>
+        {/* Button: Upload */}
+        <Box height='10' width='50' ml='auto'>
+          <UploadAssetModal />
+        </Box>
+
+      </Flex>
 
       {/* Used for debugging purposes */}
       {/* <p>{filter}</p> */}

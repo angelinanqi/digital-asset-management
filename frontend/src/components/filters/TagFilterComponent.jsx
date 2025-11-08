@@ -16,10 +16,6 @@ export default function FilterComponent({ onChange }) {
     // Store fetched asset tags into 'tags' array
     const [tags, setTags] = useState([]);
 
-    const items = [
-        { label: 'None', filterValue: '?ordering=name' },
-    ]
-
     useEffect(() => {
         // Function to fetch available tags from endpoint
         const getTags = async () => {
@@ -51,7 +47,7 @@ export default function FilterComponent({ onChange }) {
                 <Menu.Trigger asChild>
 
                     {/* Button: Tags - Dropdown to filter by tags */}
-                    <Button variant='outline' size='sm'>
+                    <Button variant='outline' size='sm' >
                         <IoPricetagsSharp /> Tags
                     </Button>
 

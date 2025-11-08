@@ -142,7 +142,7 @@ export default function EditAssetModal({ asset }) {
                 </Dialog.ActionTrigger>
 
                 <Dialog.ActionTrigger asChild>
-                  <Button onClick={handleAssetFileEdit}>Save</Button>
+                  <Button onClick={handleAssetFileEdit} bg="blue.700" color="white">Save</Button>
                 </Dialog.ActionTrigger>
               </Dialog.Footer>
             </Dialog.Content>

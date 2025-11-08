@@ -8,8 +8,9 @@ export default function BasicFilterComponent({ onChange }) {
     const [value, setValue] = useState('');
 
     const items = [
-        { label: 'A-Z', filterValue: 'name' },
-        { label: 'Z-A', filterValue: '-name' },
+        { label: 'Default', filterValue: '' },
+        { label: 'Ascending', filterValue: 'name' },
+        { label: 'Descending', filterValue: '-name' },
         { label: 'Newest', filterValue: '-upload_datetime' },
         { label: 'Oldest', filterValue: 'upload_datetime'}
     ]
@@ -18,7 +19,7 @@ export default function BasicFilterComponent({ onChange }) {
         <>
         <Menu.Root>
             <Menu.Trigger asChild>
-                <Button variant='outline' size='sm'>
+                <Button variant='outline' size='sm' >
                     <HiSortAscending/> Sort
                 </Button>
             </Menu.Trigger>

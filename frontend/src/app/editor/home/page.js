@@ -8,10 +8,7 @@ export default function EditorHome() {
     <>
       <EditorLayout>
 
-        <h1><b>Digital Assets</b></h1>
-
-        {/* Display 'Upload' button to open modal */}
-        <UploadAssetModal/> <br/> <br/>
+        <h1><b>Digital Assets</b></h1> <br/>
 
         {/* Display asset in card format  */}
         <AssetCard/>

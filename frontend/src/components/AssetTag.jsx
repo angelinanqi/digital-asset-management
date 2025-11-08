@@ -18,7 +18,7 @@ export default function AssetTag({ tags, loading, error, selectedTags, onSelectT
             <Tag.Root
               key={tag.id}
               size="lg"
-              bg={isSelected ? "purple.500" : "gray.100"}
+              bg={isSelected ? "blue.700" : "gray.100"}
               color={isSelected ? "white" : "black"}
               _hover={{ cursor: "pointer", opacity: 0.8 }}
               onClick={() => onSelectTag(tag.id)}
