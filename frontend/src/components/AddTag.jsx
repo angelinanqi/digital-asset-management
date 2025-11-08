@@ -40,7 +40,7 @@ export default function AddTag() {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <Button size="xs" background="purple.600" color="white">
+        <Button size="xs" background="blue.700" color="white">
           <LuPlus />
           New Tag
         </Button>

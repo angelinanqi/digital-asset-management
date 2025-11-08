@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Asset, Tags
 from .serializers import AssetSerializer, TagSerializer
 from rest_framework import viewsets, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -11,22 +12,39 @@ from .serializers import AssetSerializer
 
 # Create your views here.
 class AssetViewSet(viewsets.ModelViewSet):
-    queryset = Asset.objects.all()
+
+    # queryset initially returns all the asset objects
+    queryset = Asset.objects.all() 
     serializer_class = AssetSerializer
     parser_classes = [MultiPartParser]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["name", "description", "file_type"]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["name", "description", "upload_datetime", "file_type"]
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
 
+    # ordering assets based on specified fields
+    ordering_fields = ['name', 'upload_datetime']
+
+    # filter based on specified fields 
+    filterset_fields = ['tags']
+
+    # filter based on search keywords
+    search_fields = ['name', 'description', 'file_type']
+
+    
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagSerializer
 
+    """
+    bryan edit: added sorting based on title (asc order) 
 
-@api_view(["GET"])
+    """
+    filter_backends = [filters.OrderingFilter]
+
+    ordering_fields = ['title']
+
+
+@api_view(['GET'])
 def asset_usage_count(request):
     """
     return payload which has:
@@ -76,6 +94,7 @@ def get_new_version_no(request, asset_code):
 @api_view(["GET"])
 def get_all_file_versions(request, asset_code):
     """
+    gets all asset records under the same asset code.
     """
     file_versions = Asset.objects.filter(code=asset_code).order_by("-version_no")
     serializer = AssetSerializer(file_versions, many=True)
