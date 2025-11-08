@@ -6,6 +6,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Count
+from .serializers import AssetSerializer 
 
 
 # Create your views here.
@@ -71,3 +72,11 @@ def get_new_version_no(request, asset_code):
         .first()
     )  # return first or none
     return Response((asset_version_no or 0)+ 1)
+
+@api_view(["GET"])
+def get_all_file_versions(request, asset_code):
+    """
+    """
+    file_versions = Asset.objects.filter(code=asset_code).order_by("version_no")
+    serializer = AssetSerializer(file_versions, many=True)
+    return Response(serializer.data)

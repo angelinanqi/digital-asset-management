@@ -24,4 +24,6 @@ class VersionNumberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asset
         fields = "__all__"
+
+
         

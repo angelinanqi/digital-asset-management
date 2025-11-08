@@ -6,7 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from asset import views as asset_views
-from asset.views import asset_usage_count, clear_all_tags, get_new_version_no
+from asset.views import asset_usage_count, clear_all_tags, get_new_version_no, get_all_file_versions
 
 router = routers.DefaultRouter()
 router.register(r'assets', asset_views.AssetViewSet)
@@ -19,4 +19,5 @@ urlpatterns = [
     path('tag-usage/', asset_usage_count, name="tag-usage"),
     path("clear-tags/<uuid:asset_id>/", clear_all_tags),
     path('get-new-version-no/<str:asset_code>/', get_new_version_no),
+    path('get-all-file-versions/<str:asset_code>/', get_all_file_versions),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
