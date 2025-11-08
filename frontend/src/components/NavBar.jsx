@@ -1,63 +1,62 @@
 'use client';
 
-import { Image, Flex, Button, InputGroup, Input, Box } from "@chakra-ui/react";
-import Logo from "../assets/Logo.png";
-import { LuSearch } from "react-icons/lu";
-import Link from "next/link";
-
-import SearchBar from "./SearchBar";
-
-function NavItem({ label, href }) {
-  return (
-    <Link href={href} passHref>
-      <Box
-        as="span"
-        cursor="pointer"
-        px="15px"
-        py="10px"
-        bg="white"
-        color="black"
-        borderBottomWidth="1px"
-        borderBottomColor="gray.500/50"
-        _hover={{
-          borderBottomWidth: "2px",
-          borderBottomColor: "purple.400",
-        }}
-      >
-        {label}
-      </Box>
-    </Link>
-  );
-}
+import { Button, Flex, Image, Tabs } from '@chakra-ui/react';
+import { usePathname } from 'next/navigation';
+import Logo from '../assets/Logo.png';
+import SearchBar from './SearchBar';
+import Link from 'next/link';
 
 export default function NavBar({ items = [] }) {
-  return (
-    <>
-      {/*Upper NavBar - logo, search bar, login btn*/}
-      <Flex
-        py="20px"
-        spaceX="20px"
-        align="center"
-        justify="space-between"
-        bg="white"
-      >
-        {/*left side - logo*/}
-        <Image src={Logo.src ?? Logo} alt="logo" h="40px" w="auto" />
 
-        {/*center - search bar*/}
-        <SearchBar/>
+    // usePathname returns the current route
+    const pathName = usePathname(); 
 
-        {/*right side - log in btn*/}
-        <Button size="sm" bg="purple.600" color="white">
-          Log In
-        </Button>
-      </Flex>
+    // Map the path name to the tab value
+    const currentPathName = items.find(item => item.page === pathName)?.title;
 
-      <Flex align="center" bg="white">
-        {items.map((item) => (
-          <NavItem key={item.title} label={item.title} href={item.page} />
-        ))}
-      </Flex>
-    </>
-  );
+    return (
+        <>
+            {/*Upper NavBar - logo, search bar, login btn*/}
+            <Flex
+                py="20px"
+                spaceX="20px"
+                align="center"
+                justify="space-between"
+                bg="white"
+            >
+                {/*left side - logo*/}
+                <Image src={Logo.src ?? Logo} alt="logo" h="40px" w="auto" />
+
+                {/*center - search bar*/}
+                <SearchBar />
+
+                {/*right side - log in btn*/}
+                <Button size="sm" bg="purple.600" color="white">
+                    Log In
+                </Button>
+            </Flex>
+
+            {/* Display routes (e.g. Assets, Tag Management) */}
+            <Tabs.Root value={currentPathName} lazyMount unmountOnExit variant='line' colorPalette='purple'>
+
+                    <Tabs.List>
+
+                        {/* Loop through the 'editor_items' array from EditorLayout.jsx */}
+                        {items.map((item) => (
+                            <Tabs.Trigger key={item.title} value={item.title} asChild>
+
+                                {/* Display routing icon and name */}
+                                <Link href={item.page}>
+                                    {item.icon}{item.title}
+                                </Link>
+
+                            </Tabs.Trigger>
+                        ))}
+
+                        {/* Remove the tab style but leave the horizontal lines */}
+                        <Tabs.Indicator unstyled/>
+                    </Tabs.List>
+            </Tabs.Root>
+        </>
+    );
 }
