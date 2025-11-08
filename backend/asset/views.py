@@ -77,6 +77,6 @@ def get_new_version_no(request, asset_code):
 def get_all_file_versions(request, asset_code):
     """
     """
-    file_versions = Asset.objects.filter(code=asset_code).order_by("version_no")
+    file_versions = Asset.objects.filter(code=asset_code).order_by("-version_no")
     serializer = AssetSerializer(file_versions, many=True)
     return Response(serializer.data)

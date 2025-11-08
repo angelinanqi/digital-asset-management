@@ -1,25 +1,19 @@
-import {
-  Button,
-  Card,
-  Tabs,
-  DataList,
-  Dialog,
-  NumberInput,
-  Box,
-  Grid,
-  Flex,
-  Table,
-} from "@chakra-ui/react";
-import { useState } from "react";
+import { Button, Card, Tabs, DataList, NumberInput, Box, Grid, Flex, Table, Link } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
 import Sketch from "@uiw/react-color-sketch";
 import useDownloader from "react-use-downloader";
 import EditAssetModal from "../EditAssetModal";
-import { Tags } from "@babylonjs/core";
+import UpdateAssetModal from "../UpdateAssetModal";
+import axios from "axios";
 
 export default function PreviewAssetCardv2({ asset }) {
   const BASE_API_URL = "http://127.0.0.1:8000/assets/";
+  const BASE_FILEVER_URL = "http://127.0.0.1:8000/get-all-file-versions/";
   // Handler to download asset files
+  const asset_code = asset.code;
   const { download } = useDownloader();
+
+  const [allFiles, setAllFiles] = useState([]);
 
   const [exposure, setExposure] = useState(1);
   const [shadowIntensity, setShadowIntensity] = useState(1);
@@ -43,6 +37,19 @@ export default function PreviewAssetCardv2({ asset }) {
     // Axios DELETE method: Delete an asset based on its ID
     await axios.delete(BASE_API_URL + asset_id + "/");
   };
+
+  useEffect(() => {
+    const fetchFileVersions = async () => {
+      try {
+        const res = await axios.get(BASE_FILEVER_URL + asset_code + "/");
+        setAllFiles(res.data);
+      } catch {
+        console.error("Error: ", error);
+      }
+    };
+
+    fetchFileVersions();
+  }, [asset_code]);
 
   return (
     <>
@@ -87,7 +94,9 @@ export default function PreviewAssetCardv2({ asset }) {
 
                   <Flex gap="10px">
                     <EditAssetModal asset={asset} />
-                    <Button variant="surface">Update</Button>
+
+                    <UpdateAssetModal asset={asset} />
+
                     <Button
                       variant="surface"
                       colorPalette="red"
@@ -188,10 +197,19 @@ export default function PreviewAssetCardv2({ asset }) {
                   </Table.Header>
 
                   <Table.Body>
-                    {asset.map((a)=>(
+                    {allFiles.map((a) => (
                       <Table.Row key={a.version_no}>
                         <Table.Cell>{a.version_no}</Table.Cell>
-                        <Table.Cell>{a.url}</Table.Cell>
+                        <Table.Cell>
+                          <Link
+                            variant="plain"
+                            onClick={() =>
+                              download("http://127.0.0.1:8000" + a.url, a.name + "." + a.file_type)
+                            }
+                          >
+                            {a.name + "(" + a.version_no + ")" + "." + a.file_type}
+                          </Link>
+                        </Table.Cell>
                       </Table.Row>
                     ))}
                   </Table.Body>
