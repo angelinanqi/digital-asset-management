@@ -2,7 +2,7 @@
 
 import { Button, Flex, Image, Tabs } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
-import Logo from '../assets/Logo.png';
+import Logo from '../assets/ManticAI_Logo.png';
 import SearchBar from './SearchBar';
 import Link from 'next/link';
 
@@ -31,13 +31,13 @@ export default function NavBar({ items = [] }) {
                 <SearchBar />
 
                 {/*right side - log in btn*/}
-                <Button size="sm" bg="purple.600" color="white">
+                <Button size="sm" bg="blue.700" color="white">
                     Log In
                 </Button>
             </Flex>
 
             {/* Display routes (e.g. Assets, Tag Management) */}
-            <Tabs.Root value={currentPathName} lazyMount unmountOnExit variant='line' colorPalette='purple'>
+            <Tabs.Root value={currentPathName} lazyMount unmountOnExit variant='line' colorPalette='blue'>
 
                     <Tabs.List>
 
