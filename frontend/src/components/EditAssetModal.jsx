@@ -84,7 +84,7 @@ export default function EditAssetModal({ asset }) {
     <>
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <Button variant="outline">Edit</Button>
+          <Button variant="surface">Edit</Button>
         </Dialog.Trigger>
 
         <Portal>
