@@ -125,10 +125,6 @@ export default function AssetCard() {
   return (
     <div>
 
-      <br />
-      <h1>Digital Assets</h1>
-      <br />
-
       {/* Display filter components */}
       <Stack direction='row'>
 
@@ -141,7 +137,7 @@ export default function AssetCard() {
       </Stack>
 
       {/* Used for debugging purposes */}
-      <p>{filter}</p>
+      {/* <p>{filter}</p> */}
 
       <br /><br />
 

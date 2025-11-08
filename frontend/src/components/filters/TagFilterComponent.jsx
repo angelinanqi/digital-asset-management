@@ -79,7 +79,7 @@ export default function FilterComponent({ onChange }) {
             </Menu.Root>
 
             {/* Used for debugging purposes */}
-            <p> Returned value: {value}</p>
+            {/* <p> Returned value: {value}</p> */}
 
         </>
     );
