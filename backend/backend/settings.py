@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_filters",
     "asset",
+    "user"
 ]
 
 MIDDLEWARE = [
@@ -93,6 +94,9 @@ DATABASES = {
     }
 }
 
+# Source - https://stackoverflow.com/a
+# Posted by Aswin Murugesh, modified by community. See post 'Timeline' for change history
+# Retrieved 2025-11-10, License - CC BY-SA 3.0
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -162,3 +166,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 X_FRAME_OPTIONS = 'ALLOW-FROM http://localhost:3000'
 
+AUTH_USER_MODEL = 'user.User'

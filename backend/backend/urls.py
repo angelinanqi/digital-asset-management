@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from user import views as user_views
 from asset import views as asset_views
 from asset.views import (
     asset_usage_count,
@@ -17,6 +18,8 @@ from asset.views import (
 )
 
 router = routers.DefaultRouter()
+router.register(r"users", user_views.UserViewSet)
+router.register(r"groups", user_views.GroupViewSet)
 router.register(r"assets", asset_views.AssetViewSet)
 router.register(r"tags", asset_views.TagViewSet)
 
