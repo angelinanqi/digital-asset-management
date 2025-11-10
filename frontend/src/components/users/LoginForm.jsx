@@ -7,12 +7,13 @@ import {
   Center,
   Heading,
   Button,
+  Link,
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
 
 export default function LoginForm() {
-  const [error, setError] = useState("");//store error msg
+  const [error, setError] = useState(""); //store error msg
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -72,16 +73,18 @@ export default function LoginForm() {
               />
             </Field.Root>
 
-            <Button
-              marginTop="30px"
-              colorPalette="blue"
-              onClick={handleLogin}
-            >
+            <Button marginTop="30px" colorPalette="blue" onClick={handleLogin}>
               Login
             </Button>
 
             {/* Error message */}
             {error && <Fieldset.ErrorText>{error}</Fieldset.ErrorText>}
+
+            <Box fontSize="sm">
+              <Link variant="underline" href="#">
+                Don’t have an account? Sign up!
+              </Link>
+            </Box>
           </Fieldset.Content>
         </Fieldset.Root>
       </Box>
