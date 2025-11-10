@@ -19,7 +19,6 @@ from asset.views import (
 router = routers.DefaultRouter()
 router.register(r"assets", asset_views.AssetViewSet)
 router.register(r"tags", asset_views.TagViewSet)
-router.register(r"assettag", asset_views.AssetTagViewSet)
 
 urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
