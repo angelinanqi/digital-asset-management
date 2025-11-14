@@ -1,20 +1,10 @@
-import {
-  Button,
-  Card,
-  Tabs,
-  DataList,
-  NumberInput,
-  Box,
-  Grid,
-  Flex,
-  Table,
-  Link,
-} from "@chakra-ui/react";
+import { Button, Card, Tabs, DataList, NumberInput, Box, Grid, Flex, Table, Link, Dialog, Portal, CloseButton } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import Sketch from "@uiw/react-color-sketch";
 import useDownloader from "react-use-downloader";
 import EditAssetModal from "../EditAssetModal";
 import UpdateAssetModal from "../UpdateAssetModal";
+import DeleteDialog from "../DeleteDialog";
 import axios from "axios";
 
 export default function PreviewAssetCardv2({ asset }) {
@@ -123,15 +113,41 @@ export default function PreviewAssetCardv2({ asset }) {
                       <UpdateAssetModal asset={asset} />
                     )}
 
+
                     {/* update btn (disabled for Viewer) */}
                     {localStorage.getItem("group") !== "Viewer" && (
-                      <Button
-                        variant="surface"
-                        colorPalette="red"
-                        onClick={() => deleteAsset(asset.code)}
-                      >
-                        Delete
-                      </Button>
+                      <Dialog.Root role="alertdialog">
+                        <Dialog.Trigger asChild>
+                          <Button variant="surface" colorPalette="red" onClick={() => deleteAsset(asset.code)}>
+                            Delete
+                          </Button>
+                        </Dialog.Trigger>
+                        <Portal>
+                          <Dialog.Backdrop />
+                          <Dialog.Positioner>
+                            <Dialog.Content>
+                              <Dialog.Header>
+                                <Dialog.Title>Are you sure?</Dialog.Title>
+                              </Dialog.Header>
+                              <Dialog.Body>
+                                <p>
+                                  This action cannot be undone. This will permanently delete your
+                                  asset and remove it from the system.
+                                </p>
+                              </Dialog.Body>
+                              <Dialog.Footer>
+                                <Dialog.ActionTrigger asChild>
+                                  <Button variant="outline">Cancel</Button>
+                                </Dialog.ActionTrigger>
+                                <Button variant="surface" colorPalette="red">Delete</Button>
+                              </Dialog.Footer>
+                              <Dialog.CloseTrigger asChild>
+                                <CloseButton size="sm" />
+                              </Dialog.CloseTrigger>
+                            </Dialog.Content>
+                          </Dialog.Positioner>
+                        </Portal>
+                      </Dialog.Root>
                     )}
                   </Flex>
                 </Flex>
