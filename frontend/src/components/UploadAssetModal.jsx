@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Button, CloseButton, Dialog, Field, Input, Portal, Stack, FileUpload, Textarea, Icon } from "@chakra-ui/react";
+import { toaster } from "../styles/ui/toaster";
 import { MdCloudUpload } from "react-icons/md";
 import { useState } from "react";
 import { fileTypeFromBlob } from "file-type";
@@ -18,6 +19,14 @@ export default function UploadAssetModal() {
   // state variable to store tag
   const { tags, loading, error } = useTags();
   const [selectedTag, setSelectedTag] = useState([]);
+
+  // function to display successful upload toaster
+  function displayUploadToast() {
+    return toaster.create({
+      description: 'File successfully uploaded',
+      type: 'success',
+    })
+  }
 
   async function handleTagSelect(tag_id) {
     setSelectedTag((prevSelected) => {
@@ -61,6 +70,9 @@ export default function UploadAssetModal() {
       await axios.post("http://127.0.0.1:8000/assets/", assetFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      displayUploadToast();
+
     } catch (err) {
       // Does not do anything for now.
       console.log("error", err);

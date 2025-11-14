@@ -29,6 +29,9 @@ class AssetViewSet(viewsets.ModelViewSet):
     # filter based on search keywords
     search_fields = ['name', 'description', 'file_type']
 
+    # return asset based on latest version_no
+    def get_queryset(self):
+        return Asset.objects.order_by('code', '-version_no').distinct('code')
     
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -99,3 +102,16 @@ def get_all_file_versions(request, asset_code):
     file_versions = Asset.objects.filter(code=asset_code).order_by("-version_no")
     serializer = AssetSerializer(file_versions, many=True)
     return Response(serializer.data)
+
+@api_view(["DELETE"])
+def delete_asset_by_code(request, asset_code):
+    """
+    delete assets by asset code (for version control)
+    """
+    assets_to_delete = Asset.objects.filter(code=asset_code)
+
+    count = assets_to_delete.count()
+
+    assets_to_delete.delete()
+
+    return Response({"detail": f"Deleted {count} asset(s) with code {asset_code}."})

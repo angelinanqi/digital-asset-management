@@ -15,6 +15,7 @@ from asset.views import (
     clear_all_tags,
     get_new_version_no,
     get_all_file_versions,
+    delete_asset_by_code,
 )
 
 router = routers.DefaultRouter()
@@ -33,4 +34,5 @@ urlpatterns = [
     path("clear-tags/<uuid:asset_id>/", clear_all_tags),
     path("get-new-version-no/<str:asset_code>/", get_new_version_no),
     path("get-all-file-versions/<str:asset_code>/", get_all_file_versions),
+    path("delete-asset-by-code/<str:asset_code>/", delete_asset_by_code),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

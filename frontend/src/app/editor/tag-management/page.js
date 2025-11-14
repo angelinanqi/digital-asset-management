@@ -38,6 +38,7 @@ export default function TagManagement() {
       toaster.create({
         description: "Tag deleted successfully!",
         duration: 3000,
+        type: 'success'
       });
     } catch (error) {
       console.error("Error:", error);
@@ -72,6 +73,7 @@ export default function TagManagement() {
       toaster.create({
         description: "Tag updated!",
         duration: 3000,
+        type: 'success'
       });
 
       setEditingID(null);
@@ -82,6 +84,7 @@ export default function TagManagement() {
       toaster.create({
         description: "Error updating tag!",
         duration: 3000,
+        type: 'error'
       });
     }
   }
@@ -173,7 +176,8 @@ export default function TagManagement() {
                       <>
                         <Button
                           size="xs"
-                          bg="green.600"
+                          variant='surface'
+                          colorPalette='green'
                           onClick={() => handleSaveEdit(tag.id)}
                         >
                           Save
@@ -181,7 +185,8 @@ export default function TagManagement() {
 
                         <Button
                           size="xs"
-                          bg="gray.400"
+                          variant='surface'
+                          colorPalette='gray'
                           marginLeft="10px"
                           onClick={() => setEditingID(null)}
                         >
@@ -193,7 +198,8 @@ export default function TagManagement() {
                       <>
                         <Button
                           size="xs"
-                          bg="gray.400"
+                          variant='surface'
+                          colorPalette='gray'
                           onClick={() => selectEdit(tag)}
                         >
                           Edit
@@ -201,7 +207,8 @@ export default function TagManagement() {
 
                         <Button
                           size="xs"
-                          bg="red.600"
+                          variant='surface'
+                          colorPalette='red'
                           marginLeft="10px"
                           onClick={() => handleDeleteTags(tag.id)}
                         >

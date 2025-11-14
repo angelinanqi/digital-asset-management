@@ -8,6 +8,7 @@ import axios from "axios";
 
 export default function PreviewAssetCardv2({ asset }) {
   const BASE_API_URL = "http://127.0.0.1:8000/assets/";
+  const BASE_API_DELETE = "http://127.0.0.1:8000/delete-asset-by-code/";
   const BASE_FILEVER_URL = "http://127.0.0.1:8000/get-all-file-versions/";
   // Handler to download asset files
   const asset_code = asset.code;
@@ -33,9 +34,9 @@ export default function PreviewAssetCardv2({ asset }) {
   ];
 
   // Function to delete asset files
-  const deleteAsset = async (asset_id) => {
+  const deleteAsset = async (asset_code) => {
     // Axios DELETE method: Delete an asset based on its ID
-    await axios.delete(BASE_API_URL + asset_id + "/");
+    await axios.delete(BASE_API_DELETE + asset_code + "/");
   };
 
   useEffect(() => {
@@ -100,7 +101,7 @@ export default function PreviewAssetCardv2({ asset }) {
                     <Button
                       variant="surface"
                       colorPalette="red"
-                      onClick={() => deleteAsset(asset.id)}
+                      onClick={() => deleteAsset(asset.code)}
                     >
                       Delete
                     </Button>
