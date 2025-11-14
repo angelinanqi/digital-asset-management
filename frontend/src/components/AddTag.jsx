@@ -26,6 +26,7 @@ export default function AddTag() {
       toaster.create({
         description: "Tag created successfully!🎉",
         duration: 3000,
+        type: 'success'
       });
 
       setTitle(""); //clear input
@@ -33,6 +34,7 @@ export default function AddTag() {
       toaster.create({
         description: "Error! Unable to create tag.",
         duration: 3000,
+        type: 'error'
       });
     }
   }
@@ -69,9 +71,9 @@ export default function AddTag() {
             {/*cancel and save btn*/}
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
-                <Button>Cancel</Button>
+                <Button variant='surface'>Cancel</Button>
               </Dialog.ActionTrigger>
-              <Button onClick={handleCreateTag}>Save</Button>
+              <Button variant='surface'onClick={handleCreateTag} colorPalette='green'>Save</Button>
             </Dialog.Footer>
 
             {/*close btn on top right*/}

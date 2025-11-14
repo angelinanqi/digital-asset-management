@@ -10,6 +10,7 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react";
+import { toaster } from "../styles/ui/toaster";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import useTags from "../hooks/useTags";
@@ -25,6 +26,14 @@ export default function EditAssetModal({ asset }) {
   // state variable to store tag
   const { tags, loading, error } = useTags();
   const [selectedTag, setSelectedTag] = useState([]);
+
+  // function to display successful upload toaster
+  function displayEditToast() {
+    return toaster.create({
+      description: 'File successfully edited',
+      type: 'success',
+    })
+  }
 
   //get the already assigned tags for each asset to load selected tag ui in tags area
   async function fetchSelectedTags() {
@@ -70,6 +79,9 @@ export default function EditAssetModal({ asset }) {
       await axios.patch(BASE_API_URL + asset.id + "/", assetFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      displayEditToast();
+
     } catch (err) {
       console.log(err);
     }
