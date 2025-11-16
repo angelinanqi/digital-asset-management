@@ -4,7 +4,7 @@ import Sketch from "@uiw/react-color-sketch";
 import useDownloader from "react-use-downloader";
 import EditAssetModal from "../EditAssetModal";
 import UpdateAssetModal from "../UpdateAssetModal";
-import DeleteDialog from "../DeleteDialog";
+import { ImWarning } from "react-icons/im";
 import axios from "axios";
 
 export default function PreviewAssetCardv2({ asset }) {
@@ -108,47 +108,49 @@ export default function PreviewAssetCardv2({ asset }) {
                       <EditAssetModal asset={asset} />
                     )}
 
-                    {/* update btn (disabled for Viewer) */}
-                    {localStorage.getItem("group") !== "Viewer" && (
-                      <UpdateAssetModal asset={asset} />
-                    )}
+                    <UpdateAssetModal asset={asset} />
 
+                    {/* <Button
+                      variant="surface"
+                      colorPalette="red"
+                      onClick={() => deleteAsset(asset.code)}
+                    >
+                      Delete
+                    </Button> */}
 
-                    {/* update btn (disabled for Viewer) */}
-                    {localStorage.getItem("group") !== "Viewer" && (
-                      <Dialog.Root role="alertdialog">
-                        <Dialog.Trigger asChild>
-                          <Button variant="surface" colorPalette="red" onClick={() => deleteAsset(asset.code)}>
-                            Delete
-                          </Button>
-                        </Dialog.Trigger>
-                        <Portal>
-                          <Dialog.Backdrop />
-                          <Dialog.Positioner>
-                            <Dialog.Content>
-                              <Dialog.Header>
-                                <Dialog.Title>Are you sure?</Dialog.Title>
-                              </Dialog.Header>
-                              <Dialog.Body>
-                                <p>
-                                  This action cannot be undone. This will permanently delete your
-                                  asset and remove it from the system.
-                                </p>
-                              </Dialog.Body>
-                              <Dialog.Footer>
-                                <Dialog.ActionTrigger asChild>
-                                  <Button variant="outline">Cancel</Button>
-                                </Dialog.ActionTrigger>
-                                <Button variant="surface" colorPalette="red">Delete</Button>
-                              </Dialog.Footer>
-                              <Dialog.CloseTrigger asChild>
-                                <CloseButton size="sm" />
-                              </Dialog.CloseTrigger>
-                            </Dialog.Content>
-                          </Dialog.Positioner>
-                        </Portal>
-                      </Dialog.Root>
-                    )}
+                    <Dialog.Root role="alertdialog" placement='center'>
+                      <Dialog.Trigger asChild>
+                        <Button variant="surface" colorPalette="red" onClick={() => deleteAsset(asset.code)}>
+                          Delete
+                        </Button>
+                      </Dialog.Trigger>
+                      <Portal>
+                        <Dialog.Backdrop />
+                        <Dialog.Positioner>
+                          <Dialog.Content>
+                            <Dialog.Header>
+                              <Dialog.Title>Are you sure?</Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body>
+                              <p>
+                                This action cannot be undone. This will permanently delete your
+                                asset and remove it from the system.
+                              </p>
+                            </Dialog.Body>
+                            <Dialog.Footer>
+                              <Dialog.ActionTrigger asChild>
+                                <Button variant="outline">Cancel</Button>
+                              </Dialog.ActionTrigger>
+                              <Button variant="surface" colorPalette="red">Delete</Button>
+                            </Dialog.Footer>
+                            <Dialog.CloseTrigger asChild>
+                              <CloseButton size="sm" />
+                            </Dialog.CloseTrigger>
+                          </Dialog.Content>
+                        </Dialog.Positioner>
+                      </Portal>
+                    </Dialog.Root>
+
                   </Flex>
                 </Flex>
               </Box>

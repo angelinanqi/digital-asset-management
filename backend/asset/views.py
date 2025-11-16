@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import Count
+from django.db.models import Count, Max
 from .serializers import AssetSerializer 
 
 
@@ -31,7 +31,8 @@ class AssetViewSet(viewsets.ModelViewSet):
 
     # return asset based on latest version_no
     def get_queryset(self):
-        return Asset.objects.order_by('code', '-version_no').distinct('code')
+        latest = Asset.objects.values("code").annotate(max_v=Max("version_no"))
+        return Asset.objects.filter(version_no__in=[x["max_v"] for x in latest])
     
 
 class TagViewSet(viewsets.ModelViewSet):
