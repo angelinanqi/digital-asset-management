@@ -11,25 +11,39 @@ import {
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
+import axios from 'axios';
 
 export default function LoginForm() {
   const [error, setError] = useState(""); //store error msg
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const BASE_API_URL = "http://127.0.0.1:8000/api/token/";
+
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!username || !password) {
       setError("Please fill in all fields!");
       return;
     }
 
     try {
-      // const res = await axios.post("/api/login", { email, password });
+      const response = await axios.post(BASE_API_URL, { username: username, password: password });
       setError(""); // clear error on success
       alert("Login successful!");
+
+      // check and see if the access and refresh tokens received or not
+      console.log("access token", response.data.access);
+      console.log("refresh token", response.data.refresh);
+
+      localStorage.setItem("accessToken", response.data.access);
+      localStorage.setItem("refreshToken", response.data.refresh);
+
+      
+
     } catch (err) {
       setError("Invalid credentials. Please try again.");
     }
+
   };
 
   return (
@@ -51,16 +65,17 @@ export default function LoginForm() {
           Digital Asset Management System
         </Heading>
 
+        
         <Fieldset.Root size="lg" invalid={error !== ""}>
           <Fieldset.Content>
             <Field.Root>
-              <Field.Label>E-mail</Field.Label>
+              <Field.Label>Username</Field.Label>
               <Input
-                name="email"
-                type="email"
+                name="username"
+                type="username"
                 borderColor="gray.300"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Field.Root>
 
