@@ -4,7 +4,7 @@ import Sketch from "@uiw/react-color-sketch";
 import useDownloader from "react-use-downloader";
 import EditAssetModal from "../EditAssetModal";
 import UpdateAssetModal from "../UpdateAssetModal";
-import DeleteDialog from "../DeleteDialog";
+import { ImWarning } from "react-icons/im";
 import axios from "axios";
 
 export default function PreviewAssetCardv2({ asset }) {
@@ -107,7 +107,7 @@ export default function PreviewAssetCardv2({ asset }) {
                       Delete
                     </Button> */}
 
-                    <Dialog.Root role="alertdialog">
+                    <Dialog.Root role="alertdialog" placement='center'>
                       <Dialog.Trigger asChild>
                         <Button variant="surface" colorPalette="red" onClick={() => deleteAsset(asset.code)}>
                           Delete
@@ -122,8 +122,8 @@ export default function PreviewAssetCardv2({ asset }) {
                             </Dialog.Header>
                             <Dialog.Body>
                               <p>
-                                This action cannot be undone. This will permanently delete your
-                                asset and remove it from the system.
+                                This will permanently delete your
+                                asset and remove it from the system!
                               </p>
                             </Dialog.Body>
                             <Dialog.Footer>
