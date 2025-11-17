@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function SignUpForm() {
@@ -21,6 +22,8 @@ export default function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
+  
+  const router = useRouter();
 
   const BASE_API_URL = "http://127.0.0.1:8000/users/";
 
@@ -59,6 +62,10 @@ export default function SignUpForm() {
       console.log("touch me boy");
       setError(""); // clear error on success
       alert("Registration successful!");
+
+      router.push("/login"); 
+
+
     } catch (err) {
       setError("Registration failed. Please try again.");
     }

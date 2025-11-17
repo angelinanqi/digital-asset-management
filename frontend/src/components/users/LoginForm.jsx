@@ -11,12 +11,15 @@ import {
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
-import axios from 'axios';
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function LoginForm() {
   const [error, setError] = useState(""); //store error msg
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const router = useRouter();
 
   const BASE_API_URL = "http://127.0.0.1:8000/api/token/";
 
@@ -27,23 +30,33 @@ export default function LoginForm() {
     }
 
     try {
-      const response = await axios.post(BASE_API_URL, { username: username, password: password });
+      // send a POST request to the endpoint
+      // returns access, refresh tokens with id and group
+      const response = await axios.post(BASE_API_URL, {
+        username: username,
+        password: password,
+      });
       setError(""); // clear error on success
       alert("Login successful!");
 
-      // check and see if the access and refresh tokens received or not
-      console.log("access token", response.data.access);
-      console.log("refresh token", response.data.refresh);
-
+      // store the access, refresh tokens with id and group using localStorage
       localStorage.setItem("accessToken", response.data.access);
       localStorage.setItem("refreshToken", response.data.refresh);
+      localStorage.setItem("id", response.data.id);
+      localStorage.setItem("group", response.data.group);
 
-      
+      const group = response.data.group;
 
+      if (group === "Viewer") {
+        router.push("/editor/home");
+      } else if (group === "Editor") {
+        router.push("/editor/home");
+      } else {
+        window.location.href = "http://127.0.0.1:8000/admin/";
+      }
     } catch (err) {
       setError("Invalid credentials. Please try again.");
     }
-
   };
 
   return (
@@ -65,7 +78,6 @@ export default function LoginForm() {
           Digital Asset Management System
         </Heading>
 
-        
         <Fieldset.Root size="lg" invalid={error !== ""}>
           <Fieldset.Content>
             <Field.Root>

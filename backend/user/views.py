@@ -4,7 +4,8 @@ from .models import User
 from .serializers import UserSerializer, GroupSerializer
 from rest_framework import permissions, viewsets
 from rest_framework.permissions import IsAdminUser, AllowAny
-
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import NewTokenObtainPairSerializer
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -31,3 +32,6 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all().order_by("name")
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class NewTokenObtainPairView(TokenObtainPairView):
+    serializer_class = NewTokenObtainPairSerializer

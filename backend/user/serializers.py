@@ -3,6 +3,7 @@ from .models import User
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -62,3 +63,18 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ["url", "name"]
+
+class NewTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        group_name = None
+        if self.user.groups.exists():
+            group_name = self.user.groups.first().name
+
+        # add whatever you want to return
+        # data['username'] = self.user.username
+        data['id'] = self.user.id
+        data["group"] = group_name
+
+        return data
