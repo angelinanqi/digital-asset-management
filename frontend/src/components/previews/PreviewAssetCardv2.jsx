@@ -4,24 +4,21 @@ import Sketch from "@uiw/react-color-sketch";
 import useDownloader from "react-use-downloader";
 import EditAssetModal from "../EditAssetModal";
 import UpdateAssetModal from "../UpdateAssetModal";
-import { ImWarning } from "react-icons/im";
 import axios from "axios";
 
-export default function PreviewAssetCardv2({ asset }) {
+export default function PreviewAssetCardv2({ asset, exposure, shadowIntensity, shadowSoftness, hsva,
+  onExposureChange, onShadowIntensityChange, onShadowSoftnessChange, onHsvaChange
+ }) {
   const BASE_API_URL = "http://127.0.0.1:8000/assets/";
   const BASE_API_DELETE = "http://127.0.0.1:8000/delete-asset-by-code/";
   const BASE_FILEVER_URL = "http://127.0.0.1:8000/get-all-file-versions/";
+
   // Handler to download asset files
   const asset_code = asset.code;
   const { download } = useDownloader();
 
   const [allFiles, setAllFiles] = useState([]);
 
-  const [exposure, setExposure] = useState(1);
-  const [shadowIntensity, setShadowIntensity] = useState(1);
-  const [shadowSoftness, setShadowSoftness] = useState(1);
-
-  const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 0 });
   const [disableAlpha, setDisableAlpha] = useState(false);
 
   // Only enable advanced settings for 3D models
@@ -110,14 +107,6 @@ export default function PreviewAssetCardv2({ asset }) {
 
                     <UpdateAssetModal asset={asset} />
 
-                    {/* <Button
-                      variant="surface"
-                      colorPalette="red"
-                      onClick={() => deleteAsset(asset.code)}
-                    >
-                      Delete
-                    </Button> */}
-
                     <Dialog.Root role="alertdialog" placement='center'>
                       <Dialog.Trigger asChild>
                         <Button variant="surface" colorPalette="red" onClick={() => deleteAsset(asset.code)}>
@@ -167,7 +156,7 @@ export default function PreviewAssetCardv2({ asset }) {
                         <NumberInput.Root
                           width="150px"
                           value={exposure}
-                          onValueChange={(e) => setExposure(e.value)}
+                          onValueChange={(e) => onExposureChange(e.value)}
                           min="0"
                           max="2"
                           step={0.01}
@@ -184,7 +173,7 @@ export default function PreviewAssetCardv2({ asset }) {
                         <NumberInput.Root
                           width="150px"
                           value={shadowIntensity}
-                          onValueChange={(e) => setShadowIntensity(e.value)}
+                          onValueChange={(e) => onShadowIntensityChange(e.value)}
                           min="0"
                           max="2"
                           step={0.01}
@@ -201,7 +190,7 @@ export default function PreviewAssetCardv2({ asset }) {
                         <NumberInput.Root
                           width="150px"
                           value={shadowSoftness}
-                          onValueChange={(e) => setShadowSoftness(e.value)}
+                          onValueChange={(e) => onShadowSoftnessChange(e.value)}
                           min="0"
                           max="1"
                           step={0.01}
@@ -217,14 +206,14 @@ export default function PreviewAssetCardv2({ asset }) {
 
                   <>
                     <Box>
-                      <p>Shadow Softness</p>
+                      <p>Background Colour</p>
                       <Box marginTop="10px">
                         <Sketch
                           style={{ width: 300 }}
                           color={hsva}
                           disableAlpha={disableAlpha}
                           onChange={(color) => {
-                            setHsva(color.hsva);
+                            onHsvaChange(color.hsva);
                           }}
                         />
                       </Box>

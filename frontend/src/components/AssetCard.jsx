@@ -14,6 +14,7 @@ import UploadAssetModal from "./UploadAssetModal";
 import BasicFilterComponent from "./filters/BasicFilterComponent";
 import TagFilterComponent from "./filters/TagFilterComponent";
 import PreviewAssetModal from "./previews/PreviewAssetModal";
+import PreviewVideoAsset from "./previews/PreviewVideoAsset";
 import EditAssetModal from "./EditAssetModal";
 import useDownloader from "react-use-downloader";
 import axios from "axios";
@@ -176,6 +177,12 @@ export default function AssetCard() {
                         />
                       </Center>
                     )}
+
+                    {/* Conditional rendering to display previews for mp4 files */}
+                    {(asset.file_type === 'mp4') && (
+                      <PreviewVideoAsset assetURL={asset.url}/>
+                    )}
+
 
                     {/* Add later: Conditional rendering to display previews for mp4 videos */}
 
