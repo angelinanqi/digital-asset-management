@@ -162,7 +162,7 @@ export default function SignUpForm() {
             {error && <Fieldset.ErrorText mt={3}>{error}</Fieldset.ErrorText>}
 
             <Box fontSize="sm">
-              <Link variant="underline" href="#">
+              <Link variant="underline" href="/login">
                 Already have an account? Log in!
               </Link>
             </Box>

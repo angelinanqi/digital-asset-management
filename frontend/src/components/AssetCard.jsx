@@ -144,7 +144,7 @@ export default function AssetCard() {
 
         {/* Button: Upload */}
         <Box height="10" width="50" ml="auto">
-          <UploadAssetModal />
+          {localStorage.getItem("group") !== "Viewer" && <UploadAssetModal />}
         </Box>
       </Flex>
 

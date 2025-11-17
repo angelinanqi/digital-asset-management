@@ -109,7 +109,7 @@ export default function LoginForm() {
             {error && <Fieldset.ErrorText>{error}</Fieldset.ErrorText>}
 
             <Box fontSize="sm">
-              <Link variant="underline" href="#">
+              <Link variant="underline" href="/signup">
                 Don’t have an account? Sign up!
               </Link>
             </Box>
