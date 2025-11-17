@@ -1,10 +1,18 @@
 "use client";
 
-import { Box, Button, Card, Center, Flex, Image, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  Center,
+  Flex,
+  Image,
+  Stack,
+} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import UploadAssetModal from "./UploadAssetModal";
 import BasicFilterComponent from "./filters/BasicFilterComponent";
-import TagFilterComponent from './filters/TagFilterComponent';
+import TagFilterComponent from "./filters/TagFilterComponent";
 import PreviewAssetModal from "./previews/PreviewAssetModal";
 import EditAssetModal from "./EditAssetModal";
 import useDownloader from "react-use-downloader";
@@ -22,10 +30,10 @@ export default function AssetCard() {
   const [assetTagMap, setAssetTagMap] = useState({});
 
   // Stores the filter keyword (e.g. ?ordering=name)
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState("");
 
   // Stores the tag filter
-  const [tagFilter, setTagFilter] = useState('');
+  const [tagFilter, setTagFilter] = useState("");
 
   // Get the keyword from searchbar
   const keyword = useSelector((state) => state.search.keyword);
@@ -50,28 +58,26 @@ export default function AssetCard() {
 
   // bryan useEffect()
   useEffect(() => {
-
     /*
     GET (retrieve) assets from backend endpoint
     Note: GET endpoint changes based on filter options
     */
 
     const getAssets = async () => {
-
       // Use URLSearchParams() to build the query after /?
       let params = new URLSearchParams();
 
       // Filter by name, description, and file_type
-      if (keyword) params.append('search', keyword);
+      if (keyword) params.append("search", keyword);
 
       // Filter by A-Z, Z-A, Newest, Oldest
-      if (filter) params.append('ordering', filter);
+      if (filter) params.append("ordering", filter);
 
       // Filter by available tags (If available)
-      if (tagFilter) params.append('tags', tagFilter);
+      if (tagFilter) params.append("tags", tagFilter);
 
       // Build the GET backend endpoint to retrieve filtered assets
-      const url = BASE_API_URL_ASSETS + '?' + params.toString();
+      const url = BASE_API_URL_ASSETS + "?" + params.toString();
 
       // Store the GET responses (results) under 'assets' array
       const response = await axios.get(url);
@@ -122,50 +128,44 @@ export default function AssetCard() {
     loadAssets();
   }, []);
 
-
   return (
     <div>
-
       {/* Display filter components and upload button*/}
-      <Flex gap='2' justify='space-between'>
-
+      <Flex gap="2" justify="space-between">
         {/* Filter based on A-Z, Z-A, newest, and latest */}
-        <Box height='10'>
+        <Box height="10">
           <BasicFilterComponent onChange={(e) => setFilter(e)} />
         </Box>
 
         {/* Filter based on existing tags */}
-        <Box height='10'>
+        <Box height="10">
           <TagFilterComponent onChange={(e) => setTagFilter(e)} />
         </Box>
 
         {/* Button: Upload */}
-        <Box height='10' width='50' ml='auto'>
-          <UploadAssetModal />
+        <Box height="10" width="50" ml="auto">
+          {localStorage.getItem("group") !== "Viewer" && <UploadAssetModal />}
         </Box>
-
       </Flex>
 
       {/* Used for debugging purposes */}
       {/* <p>{filter}</p> */}
 
-      <br /><br />
+      <br />
+      <br />
 
       {/* Using flex to display asset cards */}
       <Flex gap={31} direction="row" wrap="wrap">
-
         {/* Loop through the 'assets' array */}
         {assets.map((asset) => {
-
           return (
             <Card.Root key={asset.id} width="320px" variant="elevated">
               <Card.Body gap="2" colorPalette="gray">
-
                 <Stack>
-                  <Box h='140px'>
-
+                  <Box h="140px">
                     {/* Conditional rendering to display previews for png and jpg files*/}
-                    {(asset.file_type === 'png' || asset.file_type === 'jpg') && (
+                    {(asset.file_type === "png" ||
+                      asset.file_type === "jpg") && (
                       <Center>
                         <Image
                           alt={asset.name}
@@ -180,7 +180,7 @@ export default function AssetCard() {
                     {/* Add later: Conditional rendering to display previews for mp4 videos */}
 
                     {/* Conditional rendering to display previews for glb models */}
-                    {asset.file_type === 'glb' && (
+                    {asset.file_type === "glb" && (
                       <model-viewer
                         alt={asset.name}
                         src={asset.url}
@@ -189,7 +189,6 @@ export default function AssetCard() {
                         camera-controls
                       />
                     )}
-
                   </Box>
 
                   {/* Display asset details (name, file size, description) */}
@@ -202,7 +201,6 @@ export default function AssetCard() {
 
                 {/* Display asset details (uploaded by, datetime, tags) */}
                 <Flex direction="column">
-
                   <Card.Description>
                     <b>Uploaded By:</b> {asset.uploaded_by}
                   </Card.Description>
@@ -213,7 +211,6 @@ export default function AssetCard() {
 
                   {/* IMPORTANT: Display tags */}
                   <Card.Description>
-
                     <b>Tags: </b>
                     {
                       // get tags for this asset
@@ -224,25 +221,29 @@ export default function AssetCard() {
                           : "None";
                       })()
                     }
-
                   </Card.Description>
-
                 </Flex>
               </Card.Body>
 
               {/* Footer displays feature buttons */}
               <Card.Footer justifyContent="flex-end">
-
                 {/* Button: Preview */}
                 <PreviewAssetModal asset={asset} />
 
                 {/* Button: Download */}
-                <Button variant="outline" onClick={() => download(asset.url, asset.name + '.' + asset.file_type)}>
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    download(asset.url, asset.name + "." + asset.file_type)
+                  }
+                >
                   Download
                 </Button>
 
-                {/* Button: Edit */}
-                <EditAssetModal asset={asset} />
+                {/* Button: Edit (disabled for Viewer) */}
+                {localStorage.getItem("group") !== "Viewer" && (
+                  <EditAssetModal asset={asset} />
+                )}
               </Card.Footer>
             </Card.Root>
           );

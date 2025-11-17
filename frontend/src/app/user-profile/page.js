@@ -1,3 +1,4 @@
+"use client";
 import {
   Grid,
   GridItem,
@@ -10,11 +11,24 @@ import {
   Button,
   Input,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { CgUserlane } from "react-icons/cg";
 import NavBar from "../../components/NavBar";
+import { useRouter } from "next/navigation";
+import axios from 'axios';
 
 export default function UserProfile() {
+  const BASE_API_URL = "http://127.0.0.1:8000/users/";
+
+  const router = useRouter();
+
+  const handleLogOut = () => {
+    router.push("/login");
+    alert("You have been logged out!");
+  }
+
+
   return (
     <>
       <Container>
@@ -41,11 +55,13 @@ export default function UserProfile() {
                   <CgUserlane size="60px" color="white" />
                 </Box>
 
-                <Heading>Hello, Username or Name!</Heading>
+                <Heading>Hello, username or Name!</Heading>
 
                 <Text fontSize="md" color="fg.muted">
                   useremail@gmail.com
                 </Text>
+
+                <Button colorPalette="blue" mt="10px" width="180px" onClick={handleLogOut}>Log Out</Button>
 
                 <Box
                   borderTopWidth="1px"

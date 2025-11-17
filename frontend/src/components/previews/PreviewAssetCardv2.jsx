@@ -1,4 +1,15 @@
-import { Button, Card, Tabs, DataList, NumberInput, Box, Grid, Flex, Table, Link } from "@chakra-ui/react";
+import {
+  Button,
+  Card,
+  Tabs,
+  DataList,
+  NumberInput,
+  Box,
+  Grid,
+  Flex,
+  Table,
+  Link,
+} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import Sketch from "@uiw/react-color-sketch";
 import useDownloader from "react-use-downloader";
@@ -21,6 +32,9 @@ export default function PreviewAssetCardv2({ asset }) {
 
   const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 0 });
   const [disableAlpha, setDisableAlpha] = useState(false);
+
+  // Only enable advanced settings for 3D models
+  const is3DModel = asset.file_type === "glb";
 
   const metadata = [
     { label: "Name", value: asset.name },
@@ -59,7 +73,12 @@ export default function PreviewAssetCardv2({ asset }) {
           <Tabs.Root defaultValue="metadata" variant="outline">
             <Tabs.List>
               <Tabs.Trigger value="metadata">Metadata</Tabs.Trigger>
-              <Tabs.Trigger value="advanced">Advanced Settings</Tabs.Trigger>
+
+              {/* Only show Advanced tab if 3D model */}
+              {is3DModel && (
+                <Tabs.Trigger value="advanced">Advanced Settings</Tabs.Trigger>
+              )}
+
               <Tabs.Trigger value="version">Version Control</Tabs.Trigger>
             </Tabs.List>
 
@@ -93,97 +112,108 @@ export default function PreviewAssetCardv2({ asset }) {
                   </Button>
 
                   <Flex gap="10px">
-                    <EditAssetModal asset={asset} />
+                    {/* update btn (disabled for Viewer) */}
+                    {localStorage.getItem("group") !== "Viewer" && (
+                      <EditAssetModal asset={asset} />
+                    )}
 
-                    <UpdateAssetModal asset={asset} />
+                    {/* update btn (disabled for Viewer) */}
+                    {localStorage.getItem("group") !== "Viewer" && (
+                      <UpdateAssetModal asset={asset} />
+                    )}
 
-                    <Button
-                      variant="surface"
-                      colorPalette="red"
-                      onClick={() => deleteAsset(asset.id)}
-                    >
-                      Delete
-                    </Button>
+                    {/* update btn (disabled for Viewer) */}
+                    {localStorage.getItem("group") !== "Viewer" && (
+                      <Button
+                        variant="surface"
+                        colorPalette="red"
+                        onClick={() => deleteAsset(asset.id)}
+                      >
+                        Delete
+                      </Button>
+                    )}
                   </Flex>
                 </Flex>
               </Box>
             </Tabs.Content>
 
             {/*advanced settings tab*/}
-            <Tabs.Content value="advanced">
-              <Grid templateColumns="1fr 2fr" gap="50px">
-                <>
-                  <Grid templateRows="repeat(3,1fr)" gap="10px">
-                    <Box>
-                      <p>Exposure</p>
-                      <NumberInput.Root
-                        width="150px"
-                        value={exposure}
-                        onValueChange={(e) => setExposure(e.value)}
-                        min="0"
-                        max="2"
-                        step={0.01}
-                        allowMouseWheel
-                        marginTop="10px"
-                      >
-                        <NumberInput.Control />
-                        <NumberInput.Input />
-                      </NumberInput.Root>
-                    </Box>
+            {is3DModel && (
+              <Tabs.Content value="advanced">
+                <Grid templateColumns="1fr 2fr" gap="50px">
+                  <>
+                    <Grid templateRows="repeat(3,1fr)" gap="10px">
+                      <Box>
+                        <p>Exposure</p>
+                        <NumberInput.Root
+                          width="150px"
+                          value={exposure}
+                          onValueChange={(e) => setExposure(e.value)}
+                          min="0"
+                          max="2"
+                          step={0.01}
+                          allowMouseWheel
+                          marginTop="10px"
+                        >
+                          <NumberInput.Control />
+                          <NumberInput.Input />
+                        </NumberInput.Root>
+                      </Box>
 
-                    <Box>
-                      <p>Shadow Intensity</p>
-                      <NumberInput.Root
-                        width="150px"
-                        value={shadowIntensity}
-                        onValueChange={(e) => setShadowIntensity(e.value)}
-                        min="0"
-                        max="2"
-                        step={0.01}
-                        allowMouseWheel
-                        marginTop="10px"
-                      >
-                        <NumberInput.Control />
-                        <NumberInput.Input />
-                      </NumberInput.Root>
-                    </Box>
+                      <Box>
+                        <p>Shadow Intensity</p>
+                        <NumberInput.Root
+                          width="150px"
+                          value={shadowIntensity}
+                          onValueChange={(e) => setShadowIntensity(e.value)}
+                          min="0"
+                          max="2"
+                          step={0.01}
+                          allowMouseWheel
+                          marginTop="10px"
+                        >
+                          <NumberInput.Control />
+                          <NumberInput.Input />
+                        </NumberInput.Root>
+                      </Box>
 
+                      <Box>
+                        <p>Shadow Softness</p>
+                        <NumberInput.Root
+                          width="150px"
+                          value={shadowSoftness}
+                          onValueChange={(e) => setShadowSoftness(e.value)}
+                          min="0"
+                          max="1"
+                          step={0.01}
+                          allowMouseWheel
+                          marginTop="10px"
+                        >
+                          <NumberInput.Control />
+                          <NumberInput.Input />
+                        </NumberInput.Root>
+                      </Box>
+                    </Grid>
+                  </>
+
+                  <>
                     <Box>
                       <p>Shadow Softness</p>
-                      <NumberInput.Root
-                        width="150px"
-                        value={shadowSoftness}
-                        onValueChange={(e) => setShadowSoftness(e.value)}
-                        min="0"
-                        max="1"
-                        step={0.01}
-                        allowMouseWheel
-                        marginTop="10px"
-                      >
-                        <NumberInput.Control />
-                        <NumberInput.Input />
-                      </NumberInput.Root>
+                      <Box marginTop="10px">
+                        <Sketch
+                          style={{ width: 300 }}
+                          color={hsva}
+                          disableAlpha={disableAlpha}
+                          onChange={(color) => {
+                            setHsva(color.hsva);
+                          }}
+                        />
+                      </Box>
                     </Box>
-                  </Grid>
-                </>
-
-                <>
-                  <Box>
-                    <p>Shadow Softness</p>
-                    <Box marginTop="10px">
-                      <Sketch
-                        style={{ width: 300 }}
-                        color={hsva}
-                        disableAlpha={disableAlpha}
-                        onChange={(color) => {
-                          setHsva(color.hsva);
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                </>
-              </Grid>
-            </Tabs.Content>
+                  </>
+                </Grid>
+              </Tabs.Content>
+            )}
 
             {/*version control tab*/}
             <Tabs.Content value="version">
@@ -204,10 +234,18 @@ export default function PreviewAssetCardv2({ asset }) {
                           <Link
                             variant="plain"
                             onClick={() =>
-                              download("http://127.0.0.1:8000" + a.url, a.name + "." + a.file_type)
+                              download(
+                                "http://127.0.0.1:8000" + a.url,
+                                a.name + "." + a.file_type
+                              )
                             }
                           >
-                            {a.name + "(" + a.version_no + ")" + "." + a.file_type}
+                            {a.name +
+                              "(" +
+                              a.version_no +
+                              ")" +
+                              "." +
+                              a.file_type}
                           </Link>
                         </Table.Cell>
                       </Table.Row>

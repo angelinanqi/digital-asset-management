@@ -1,6 +1,18 @@
 "use client";
 
-import { Box, Button, CloseButton, Dialog, Field, Input, Portal, Stack, FileUpload, Textarea, Icon } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  CloseButton,
+  Dialog,
+  Field,
+  Input,
+  Portal,
+  Stack,
+  FileUpload,
+  Textarea,
+  Icon,
+} from "@chakra-ui/react";
 import { MdCloudUpload } from "react-icons/md";
 import { useState } from "react";
 import { fileTypeFromBlob } from "file-type";
@@ -70,9 +82,10 @@ export default function UploadAssetModal() {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <Button variant="outline" size='sm' bg="blue.700" color="white">
-          <MdCloudUpload /> Upload Asset
-          </Button>
+        <Button variant="outline" size="sm" bg="blue.700" color="white">
+          <MdCloudUpload />
+          Upload Asset
+        </Button>
       </Dialog.Trigger>
 
       <Portal>
@@ -115,13 +128,14 @@ export default function UploadAssetModal() {
 
                   <FileUpload.Dropzone>
                     <Icon size="md" color="fg.muted">
-                      <MdCloudUpload/>
+                      <MdCloudUpload />
                     </Icon>
 
                     <FileUpload.DropzoneContent>
                       <Box>
-                        Drop a file here. <br/>
-                        Supported files only include (.jpg, .png, .mp4, and .glb).
+                        Drop a file here. <br />
+                        Supported files only include (.jpg, .png, .mp4, and
+                        .glb).
                       </Box>
                     </FileUpload.DropzoneContent>
                   </FileUpload.Dropzone>
@@ -152,7 +166,13 @@ export default function UploadAssetModal() {
               </Dialog.ActionTrigger>
 
               <Dialog.ActionTrigger asChild>
-                <Button onClick={handleAssetFileUpload} bg="blue.700" color="white">Upload</Button>
+                <Button
+                  onClick={handleAssetFileUpload}
+                  bg="blue.700"
+                  color="white"
+                >
+                  Upload
+                </Button>
               </Dialog.ActionTrigger>
             </Dialog.Footer>
           </Dialog.Content>

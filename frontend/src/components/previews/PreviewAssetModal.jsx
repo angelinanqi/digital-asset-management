@@ -79,8 +79,8 @@ export default function PreviewAssetModal({ asset }) {
                             touch-action="pan-y"
                             environment-image="neutral"
                             style={{
-                              width: "700px",
-                              height: "600px",
+                              width: "800px",
+                              height: "500px",
                               borderRadius: "12px",
                               backgroundColor: hsvaToHex(hsva),
                             }}

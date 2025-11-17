@@ -11,22 +11,50 @@ import {
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function LoginForm() {
   const [error, setError] = useState(""); //store error msg
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const router = useRouter();
+
+  const BASE_API_URL = "http://127.0.0.1:8000/api/token/";
+
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!username || !password) {
       setError("Please fill in all fields!");
       return;
     }
 
     try {
-      // const res = await axios.post("/api/login", { email, password });
+      // send a POST request to the endpoint
+      // returns access, refresh tokens with id and group
+      const response = await axios.post(BASE_API_URL, {
+        username: username,
+        password: password,
+      });
       setError(""); // clear error on success
       alert("Login successful!");
+
+      // store the access, refresh tokens with id and group using localStorage
+      localStorage.setItem("accessToken", response.data.access);
+      localStorage.setItem("refreshToken", response.data.refresh);
+      localStorage.setItem("username", response.data.username);
+      localStorage.setItem("id", response.data.id);
+      localStorage.setItem("group", response.data.group);
+
+      const group = response.data.group;
+
+      if (group === "Viewer") {
+        router.push("/editor/home");
+      } else if (group === "Editor") {
+        router.push("/editor/home");
+      } else {
+        window.location.href = "http://127.0.0.1:8000/admin/";
+      }
     } catch (err) {
       setError("Invalid credentials. Please try again.");
     }
@@ -54,13 +82,13 @@ export default function LoginForm() {
         <Fieldset.Root size="lg" invalid={error !== ""}>
           <Fieldset.Content>
             <Field.Root>
-              <Field.Label>E-mail</Field.Label>
+              <Field.Label>Username</Field.Label>
               <Input
-                name="email"
-                type="email"
+                name="username"
+                type="username"
                 borderColor="gray.300"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Field.Root>
 
@@ -81,7 +109,7 @@ export default function LoginForm() {
             {error && <Fieldset.ErrorText>{error}</Fieldset.ErrorText>}
 
             <Box fontSize="sm">
-              <Link variant="underline" href="#">
+              <Link variant="underline" href="/signup">
                 Don’t have an account? Sign up!
               </Link>
             </Box>

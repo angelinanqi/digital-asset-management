@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_filters",
     "asset",
-    "user"
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -107,6 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 12,
+        },
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
@@ -152,18 +155,17 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     # For laptop access (Frontend)
-    'http://localhost:3000',
-
+    "http://localhost:3000",
     # For iPhone access (Frontend)
-    'http://192.168.0.216:3000',
+    "http://192.168.0.216:3000",
 ]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
-X_FRAME_OPTIONS = 'ALLOW-FROM http://localhost:3000'
+X_FRAME_OPTIONS = "ALLOW-FROM http://localhost:3000"
 
-AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = "user.User"
