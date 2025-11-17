@@ -1,25 +1,7 @@
-import {
-  Accordion,
-  Box,
-  Button,
-  Card,
-  CloseButton,
-  Dialog,
-  Grid,
-  GridItem,
-  NumberInput,
-  Portal,
-  Span,
-  Heading,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, Button, CloseButton, Dialog, Grid, Portal, Heading, Flex } from "@chakra-ui/react";
 import { useState } from "react";
-
 import { hsvaToHex } from "@uiw/color-convert";
-import Sketch from "@uiw/react-color-sketch";
-
 import PreviewAssetCardv2 from "./PreviewAssetCardv2";
-
 import PreviewImageAsset from "./PreviewImageAsset";
 import PreviewVideoAsset from "./PreviewVideoAsset";
 
@@ -27,9 +9,7 @@ export default function PreviewAssetModal({ asset }) {
   const [exposure, setExposure] = useState(1);
   const [shadowIntensity, setShadowIntensity] = useState(1);
   const [shadowSoftness, setShadowSoftness] = useState(1);
-
   const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 0 });
-  const [disableAlpha, setDisableAlpha] = useState(false);
 
   return (
     <>
@@ -100,8 +80,21 @@ export default function PreviewAssetModal({ asset }) {
                       </Box>
 
                       <Box>
-                        <PreviewAssetCardv2 asset={asset}/>
+
+                        <PreviewAssetCardv2
+                        asset={asset}
+                        exposure={exposure}
+                        shadowIntensity={shadowIntensity}
+                        shadowSoftness={shadowSoftness}
+                        hsva={hsva}
+
+                        onExposureChange={setExposure}
+                        onShadowIntensityChange={setShadowIntensity}
+                        onShadowSoftnessChange={setShadowSoftness}
+                        onHsvaChange={setHsva}
+                        />
                       </Box>
+
                     </Grid>
                   </Box>
                 </Flex>

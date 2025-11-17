@@ -1,18 +1,24 @@
 import { AspectRatio } from "@chakra-ui/react";
 
-export default function PreviewVideoAsset({ assetName, assetURL }) {
-    return (
-        <>
-            {/* Display video file based on url (assetURL) */}
-            <AspectRatio maxW='700px' ratio={16 / 9}>
-                <iframe
-                    title={assetName}
-                    width='500px'
-                    height='800px'
-                    allowFullScreen
-                    src={assetURL}
-                />
-            </AspectRatio>
-        </>
-    );
+export default function PreviewVideoAsset({ assetURL }) {
+  return (
+    <AspectRatio
+      maxW="700px"
+      ratio={16 / 9}
+      borderRadius="12px"
+    >
+      <video
+        src={assetURL}
+        controls
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: 'cover',
+          borderRadius: "12px"
+        }}
+      >
+        Sorry, your browser does not support embedded videos.
+      </video>
+    </AspectRatio>
+  );
 }
