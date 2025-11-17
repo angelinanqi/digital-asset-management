@@ -1,4 +1,15 @@
-import { Button, Card, Tabs, DataList, NumberInput, Box, Grid, Flex, Table, Link } from "@chakra-ui/react";
+import {
+  Button,
+  Card,
+  Tabs,
+  DataList,
+  NumberInput,
+  Box,
+  Grid,
+  Flex,
+  Table,
+  Link,
+} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import Sketch from "@uiw/react-color-sketch";
 import useDownloader from "react-use-downloader";
@@ -93,17 +104,26 @@ export default function PreviewAssetCardv2({ asset }) {
                   </Button>
 
                   <Flex gap="10px">
-                    <EditAssetModal asset={asset} />
+                    {/* update btn (disabled for Viewer) */}
+                    {localStorage.getItem("group") !== "Viewer" && (
+                      <EditAssetModal asset={asset} />
+                    )}
 
-                    <UpdateAssetModal asset={asset} />
+                    {/* update btn (disabled for Viewer) */}
+                    {localStorage.getItem("group") !== "Viewer" && (
+                      <UpdateAssetModal asset={asset} />
+                    )}
 
-                    <Button
-                      variant="surface"
-                      colorPalette="red"
-                      onClick={() => deleteAsset(asset.id)}
-                    >
-                      Delete
-                    </Button>
+                    {/* update btn (disabled for Viewer) */}
+                    {localStorage.getItem("group") !== "Viewer" && (
+                      <Button
+                        variant="surface"
+                        colorPalette="red"
+                        onClick={() => deleteAsset(asset.id)}
+                      >
+                        Delete
+                      </Button>
+                    )}
                   </Flex>
                 </Flex>
               </Box>
@@ -204,10 +224,18 @@ export default function PreviewAssetCardv2({ asset }) {
                           <Link
                             variant="plain"
                             onClick={() =>
-                              download("http://127.0.0.1:8000" + a.url, a.name + "." + a.file_type)
+                              download(
+                                "http://127.0.0.1:8000" + a.url,
+                                a.name + "." + a.file_type
+                              )
                             }
                           >
-                            {a.name + "(" + a.version_no + ")" + "." + a.file_type}
+                            {a.name +
+                              "(" +
+                              a.version_no +
+                              ")" +
+                              "." +
+                              a.file_type}
                           </Link>
                         </Table.Cell>
                       </Table.Row>
