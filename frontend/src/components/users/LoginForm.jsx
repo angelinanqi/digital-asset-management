@@ -42,6 +42,7 @@ export default function LoginForm() {
       // store the access, refresh tokens with id and group using localStorage
       localStorage.setItem("accessToken", response.data.access);
       localStorage.setItem("refreshToken", response.data.refresh);
+      localStorage.setItem("username", response.data.username);
       localStorage.setItem("id", response.data.id);
       localStorage.setItem("group", response.data.group);
 

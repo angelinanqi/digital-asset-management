@@ -73,7 +73,7 @@ class NewTokenObtainPairSerializer(TokenObtainPairSerializer):
             group_name = self.user.groups.first().name
 
         # add whatever you want to return
-        # data['username'] = self.user.username
+        data['username'] = self.user.username
         data['id'] = self.user.id
         data["group"] = group_name
 
