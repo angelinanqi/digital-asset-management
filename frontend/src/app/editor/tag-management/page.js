@@ -193,7 +193,8 @@ export default function TagManagement() {
                       <>
                         <Button
                           size="xs"
-                          bg="gray.400"
+                          variant="surface"
+                          colorPalette="gray"
                           onClick={() => selectEdit(tag)}
                         >
                           Edit
@@ -201,7 +202,8 @@ export default function TagManagement() {
 
                         <Button
                           size="xs"
-                          bg="red.600"
+                          variant="surface"
+                          colorPalette="red"
                           marginLeft="10px"
                           onClick={() => handleDeleteTags(tag.id)}
                         >
