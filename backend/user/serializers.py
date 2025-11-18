@@ -7,8 +7,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    password1 = serializers.CharField(write_only=True)
-    password2 = serializers.CharField(write_only=True)
+    current_password = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    password1 = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    password2 = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
     class Meta:
         model = User
@@ -20,6 +21,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "last_name",
             "password1",
             "password2",
+            "current_password",
             "email",
             "groups",
             "is_active",
@@ -32,15 +34,57 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "date_joined": {"read_only": True},
         }
 
-    def validate(self, value):
-        if value["password1"] != value["password2"]:
-            raise serializers.ValidationError("Passwords do not match.")
-        else:
+    def validate(self, attrs):
+        pw1 = attrs.get("password1")
+        pw2 = attrs.get("password2")
+        current_pw = attrs.get("current_password")
+
+        # --- SIGN UP FLOW (instance == None) ---
+        if self.instance is None:
+            if not pw1 or not pw2:
+                raise serializers.ValidationError({"password": "Password is required."})
+
+            if pw1 != pw2:
+                raise serializers.ValidationError({"password": "Passwords do not match."})
+
             try:
-                validate_password(value["password1"])  # runs all validators in settings
+                validate_password(pw1)
             except ValidationError as e:
-                raise serializers.ValidationError(list(e.messages))
-            return value
+                raise serializers.ValidationError({"password": list(e.messages)})
+
+            return attrs
+
+        # --- UPDATE FLOW (instance exists) ---
+        if pw1 or pw2:
+            if not current_pw:
+                raise serializers.ValidationError({"current_password": "Current password is required."})
+
+            if not self.instance.check_password(current_pw):
+                raise serializers.ValidationError({"current_password": "Current password is incorrect."})
+
+            if pw1 != pw2:
+                raise serializers.ValidationError({"password": "New passwords do not match."})
+
+            try:
+                validate_password(pw1)
+            except ValidationError as e:
+                raise serializers.ValidationError({"password": list(e.messages)})
+
+        return attrs
+
+    def update(self, instance, validated_data):
+        # Update personal info
+        for attr in ["first_name", "last_name", "email"]:
+            if attr in validated_data:
+                setattr(instance, attr, validated_data[attr])
+
+        # Update password if provided
+        pw1 = validated_data.get("password1")
+        if pw1:
+            instance.set_password(pw1)
+
+        instance.save()
+        return instance
 
     def create(self, validated_data):
         password = validated_data.pop("password1")
@@ -48,7 +92,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         groups_data = validated_data.pop("groups", None)
         if not groups_data:
             try:
-                default_group = Group.objects.get(id=2)
+                default_group = Group.objects.get(id=1)
                 groups_data = [default_group.id]
             except Group.DoesNotExist:
                 groups_data = []  # safe fallback

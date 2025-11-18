@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Button, Flex, Image, Tabs } from "@chakra-ui/react";
 import { LuUserRound } from "react-icons/lu";
 import { usePathname, useRouter } from "next/navigation";
@@ -14,11 +15,21 @@ export default function NavBar({ items = [] }) {
   // allow routing to another local page
   const router = useRouter();
 
+  // store login info (client-side only)
+  const [accessToken, setAccessToken] = useState(null);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    // read from localStorage only on client
+    const token = localStorage.getItem("accessToken");
+    const name = localStorage.getItem("username");
+
+    setAccessToken(token);
+    setUsername(name || "");
+  }, []);
+
   // Map the path name to the tab value
   const currentPathName = items.find((item) => item.page === pathName)?.title;
-
-  // get the access token from localStorage
-  const accessToken = localStorage.getItem("accessToken");
 
   // button to be conditionally rendered
   let button;
@@ -40,8 +51,6 @@ export default function NavBar({ items = [] }) {
       </Button>
     );
   } else {
-    // if it exists, display username
-    const username = localStorage.getItem("username");
     button = (
       <Button
         size="sm"

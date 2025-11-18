@@ -5,6 +5,9 @@ import {
   DataList,
   NumberInput,
   Box,
+  Dialog,
+  Portal,
+  CloseButton,
   Grid,
   Flex,
   Table,
@@ -17,20 +20,18 @@ import EditAssetModal from "../EditAssetModal";
 import UpdateAssetModal from "../UpdateAssetModal";
 import axios from "axios";
 
-export default function PreviewAssetCardv2({ asset }) {
-  const BASE_API_URL = "http://127.0.0.1:8000/assets/";
+export default function PreviewAssetCardv2({ asset, exposure, shadowIntensity, shadowSoftness, hsva,
+  onExposureChange, onShadowIntensityChange, onShadowSoftnessChange, onHsvaChange }) {
+
+  const BASE_API_DELETE = "http://127.0.0.1:8000/delete-asset-by-code/";
   const BASE_FILEVER_URL = "http://127.0.0.1:8000/get-all-file-versions/";
+
   // Handler to download asset files
   const asset_code = asset.code;
   const { download } = useDownloader();
 
   const [allFiles, setAllFiles] = useState([]);
 
-  const [exposure, setExposure] = useState(1);
-  const [shadowIntensity, setShadowIntensity] = useState(1);
-  const [shadowSoftness, setShadowSoftness] = useState(1);
-
-  const [hsva, setHsva] = useState({ h: 0, s: 0, v: 100, a: 0 });
   const [disableAlpha, setDisableAlpha] = useState(false);
 
   // Only enable advanced settings for 3D models
@@ -47,9 +48,9 @@ export default function PreviewAssetCardv2({ asset }) {
   ];
 
   // Function to delete asset files
-  const deleteAsset = async (asset_id) => {
+  const deleteAsset = async (asset_code) => {
     // Axios DELETE method: Delete an asset based on its ID
-    await axios.delete(BASE_API_URL + asset_id + "/");
+    await axios.delete(BASE_API_DELETE + asset_code + "/");
   };
 
   useEffect(() => {
@@ -124,13 +125,39 @@ export default function PreviewAssetCardv2({ asset }) {
 
                     {/* update btn (disabled for Viewer) */}
                     {localStorage.getItem("group") !== "Viewer" && (
-                      <Button
-                        variant="surface"
-                        colorPalette="red"
-                        onClick={() => deleteAsset(asset.id)}
-                      >
-                        Delete
-                      </Button>
+
+                      <Dialog.Root role="alertdialog" placement='center'>
+                        <Dialog.Trigger asChild>
+                          <Button variant="surface" colorPalette="red" onClick={() => deleteAsset(asset.code)}>
+                            Delete
+                          </Button>
+                        </Dialog.Trigger>
+                        <Portal>
+                          <Dialog.Backdrop />
+                          <Dialog.Positioner>
+                            <Dialog.Content>
+                              <Dialog.Header>
+                                <Dialog.Title>Are you sure?</Dialog.Title>
+                              </Dialog.Header>
+                              <Dialog.Body>
+                                <p>
+                                  This will permanently delete your
+                                  asset and remove it from the system!
+                                </p>
+                              </Dialog.Body>
+                              <Dialog.Footer>
+                                <Dialog.ActionTrigger asChild>
+                                  <Button variant="outline">Cancel</Button>
+                                </Dialog.ActionTrigger>
+                                <Button variant="surface" colorPalette="red">Delete</Button>
+                              </Dialog.Footer>
+                              <Dialog.CloseTrigger asChild>
+                                <CloseButton size="sm" />
+                              </Dialog.CloseTrigger>
+                            </Dialog.Content>
+                          </Dialog.Positioner>
+                        </Portal>
+                      </Dialog.Root>
                     )}
                   </Flex>
                 </Flex>
@@ -148,7 +175,7 @@ export default function PreviewAssetCardv2({ asset }) {
                         <NumberInput.Root
                           width="150px"
                           value={exposure}
-                          onValueChange={(e) => setExposure(e.value)}
+                          onValueChange={(e) => onExposureChange(e.value)}
                           min="0"
                           max="2"
                           step={0.01}
@@ -165,7 +192,7 @@ export default function PreviewAssetCardv2({ asset }) {
                         <NumberInput.Root
                           width="150px"
                           value={shadowIntensity}
-                          onValueChange={(e) => setShadowIntensity(e.value)}
+                          onValueChange={(e) => onShadowIntensityChange(e.value)}
                           min="0"
                           max="2"
                           step={0.01}
@@ -182,7 +209,7 @@ export default function PreviewAssetCardv2({ asset }) {
                         <NumberInput.Root
                           width="150px"
                           value={shadowSoftness}
-                          onValueChange={(e) => setShadowSoftness(e.value)}
+                          onValueChange={(e) => onShadowSoftnessChange(e.value)}
                           min="0"
                           max="1"
                           step={0.01}
@@ -198,14 +225,14 @@ export default function PreviewAssetCardv2({ asset }) {
 
                   <>
                     <Box>
-                      <p>Shadow Softness</p>
+                      <p>Background Colour</p>
                       <Box marginTop="10px">
                         <Sketch
                           style={{ width: 300 }}
                           color={hsva}
                           disableAlpha={disableAlpha}
                           onChange={(color) => {
-                            setHsva(color.hsva);
+                            onHsvaChange(color.hsva);
                           }}
                         />
                       </Box>

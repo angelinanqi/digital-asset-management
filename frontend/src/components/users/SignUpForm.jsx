@@ -61,7 +61,7 @@ export default function SignUpForm() {
       });
       console.log("touch me boy");
       setError(""); // clear error on success
-      alert("Registration successful!");
+      alert("Successful Registration!");
 
       router.push("/login"); 
 
@@ -87,6 +87,7 @@ export default function SignUpForm() {
           fontWeight="bold"
           marginBottom="50px"
         >
+          
           Sign Up
         </Heading>
 

@@ -166,18 +166,33 @@ export default function AssetCard() {
                     {/* Conditional rendering to display previews for png and jpg files*/}
                     {(asset.file_type === "png" ||
                       asset.file_type === "jpg") && (
-                      <Center>
-                        <Image
-                          alt={asset.name}
-                          src={asset.url}
-                          w="full"
-                          maxH="140px"
-                          borderRadius="10px"
-                        />
-                      </Center>
+                        <Center>
+                          <Image
+                            alt={asset.name}
+                            src={asset.url}
+                            w="full"
+                            maxH="140px"
+                            borderRadius="10px"
+                          />
+                        </Center>
+                      )}
+
+                    {/* Conditional rendering to display previews for mp4 videos */}
+                    {asset.file_type === "mp4" && (
+                      <video
+                        src={asset.url}
+                        poster={asset.thumbnail_url}
+                        muted
+                        controls={false}
+                        style={{
+                          width: "100%",
+                          maxHeight: "140px",
+                          borderRadius: "10px",
+                          objectFit: "cover",
+                        }}
+                      />
                     )}
 
-                    {/* Add later: Conditional rendering to display previews for mp4 videos */}
 
                     {/* Conditional rendering to display previews for glb models */}
                     {asset.file_type === "glb" && (

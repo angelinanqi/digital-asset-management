@@ -37,7 +37,7 @@ export default function LoginForm() {
         password: password,
       });
       setError(""); // clear error on success
-      alert("Login successful!");
+      alert("Successful Login!");
 
       // store the access, refresh tokens with id and group using localStorage
       localStorage.setItem("accessToken", response.data.access);

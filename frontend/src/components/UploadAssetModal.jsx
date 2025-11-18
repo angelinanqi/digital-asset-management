@@ -13,6 +13,7 @@ import {
   Textarea,
   Icon,
 } from "@chakra-ui/react";
+import { toaster } from "../styles/ui/toaster";
 import { MdCloudUpload } from "react-icons/md";
 import { useState } from "react";
 import { fileTypeFromBlob } from "file-type";
@@ -44,6 +45,8 @@ export default function UploadAssetModal() {
   }
 
   async function handleAssetFileUpload() {
+    const username = localStorage.getItem("username");
+
     // validate to ensure file exists
     if (!file) return;
 
@@ -60,7 +63,7 @@ export default function UploadAssetModal() {
     assetFormData.append("name", name); // name
     assetFormData.append("description", description); // description
 
-    assetFormData.append("uploaded_by", "braaaaa_yaaaaan"); // uploaded_by (hardcoded)
+    assetFormData.append("uploaded_by", username); // uploaded_by (hardcoded)
     assetFormData.append("file_type", file_type.ext); // file_type (.mime can be read as well)
     assetFormData.append("file_size", file_size); // file_size (in MB)
     assetFormData.append("url", file);
@@ -73,6 +76,12 @@ export default function UploadAssetModal() {
       await axios.post("http://127.0.0.1:8000/assets/", assetFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      toaster.create({
+        description: "Successfully Uploaded Asset!",
+        type: "info"
+      });
+
     } catch (err) {
       // Does not do anything for now.
       console.log("error", err);
