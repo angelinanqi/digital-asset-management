@@ -10,6 +10,9 @@ import {
   Text,
   Button,
   Input,
+  CloseButton,
+  Dialog,
+  Portal
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -29,6 +32,10 @@ export default function UserProfile() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [group, setGroup] = useState("");
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
 
   const handleLogOut = () => {
@@ -82,6 +89,54 @@ export default function UserProfile() {
 
   }, [router]);
 
+  const saveChanges = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.patch(`${BASE_API_URL}${id}/`,
+        {
+          first_name: firstName,
+          last_name: lastName,
+          email: email
+        },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      alert("Successfully Saved Profile Changes!")
+    } catch (error) {
+      alert("Failed to Save Profile Changes!!");
+    }
+  }
+
+  const updatePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      alert("All fields are required!");
+      return;
+    }
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+      await axios.patch(
+        `${BASE_API_URL}${id}/`,
+        {
+          current_password: currentPassword,
+          password1: newPassword,
+          password2: confirmPassword,
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      alert("Successfully Changed Password!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.current_password || error.response?.data?.password || "Failed to Update Password!");
+    }
+  };
 
   return (
     <>
@@ -109,14 +164,54 @@ export default function UserProfile() {
                   <CgUserlane size="60px" color="white" />
                 </Box>
 
-                <Heading>Account Type: {group}</Heading>
                 <Heading>Hello, {username}!</Heading>
 
                 <Text fontSize="md" color="fg.muted">
+
                   {email}
                 </Text>
 
-                <Button colorPalette="blue" mt="10px" width="180px" onClick={handleLogOut}>Log Out</Button>
+                <Text fontSize="sm" color="fg.muted">
+                  {group}
+                </Text>
+
+                {/* Log Out Button */}
+
+                <Dialog.Root role="alertdialog">
+                  <Dialog.Trigger asChild>
+                    <Button
+                      colorPalette="blue"
+                      mt="10px"
+                      width="180px"
+                    >
+                      Log Out
+                    </Button>
+                  </Dialog.Trigger>
+                  <Portal>
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                      <Dialog.Content>
+                        <Dialog.Header>
+                          <Dialog.Title>Are you sure?</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                          <p>
+                            You will be logged out. Are you sure?
+                          </p>
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                          <Dialog.ActionTrigger asChild>
+                            <Button variant="outline">Cancel</Button>
+                          </Dialog.ActionTrigger>
+                          <Button colorPalette="blue" onClick={handleLogOut}>Log Out</Button>
+                        </Dialog.Footer>
+                        <Dialog.CloseTrigger asChild>
+                          <CloseButton size="sm" />
+                        </Dialog.CloseTrigger>
+                      </Dialog.Content>
+                    </Dialog.Positioner>
+                  </Portal>
+                </Dialog.Root>
 
                 <Box
                   borderTopWidth="1px"
@@ -155,7 +250,8 @@ export default function UserProfile() {
                       </Text>
                       <Input
                         placeholder="Enter your first name"
-                        defaultValue={firstName}
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                       />
                     </Box>
 
@@ -165,7 +261,8 @@ export default function UserProfile() {
                       </Text>
                       <Input
                         placeholder="Enter your last name"
-                        defaultValue={lastName}
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                       />
                     </Box>
 
@@ -175,11 +272,12 @@ export default function UserProfile() {
                       </Text>
                       <Input
                         placeholder="Your email"
-                        defaultValue={email}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </Box>
 
-                    <Button colorPalette="blue" mt="10px" width="150px">
+                    <Button colorPalette="blue" mt="10px" width="150px" onClick={saveChanges}>
                       Save Changes
                     </Button>
                   </Box>
@@ -198,24 +296,36 @@ export default function UserProfile() {
                       <Text fontWeight="bold" mb="4px">
                         Current Password
                       </Text>
-                      <PasswordInput placeholder="Enter current password" />
+                      <PasswordInput
+                        placeholder="Enter current password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                      />
                     </Box>
 
                     <Box>
                       <Text fontWeight="bold" mb="4px">
                         New Password
                       </Text>
-                      <PasswordInput placeholder="Enter new password" />
+                      <PasswordInput
+                        placeholder="Enter new password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                      />
                     </Box>
 
                     <Box>
                       <Text fontWeight="bold" mb="4px">
                         Confirm New Password
                       </Text>
-                      <PasswordInput placeholder="Re-enter new password" />
+                      <PasswordInput
+                        placeholder="Re-enter new password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
                     </Box>
 
-                    <Button colorPalette="blue" mt="10px" width="180px">
+                    <Button colorPalette="blue" mt="10px" width="180px" onClick={updatePassword}>
                       Update Password
                     </Button>
                   </Box>

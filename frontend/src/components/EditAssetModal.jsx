@@ -10,6 +10,7 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react";
+import { toaster } from "../styles/ui/toaster";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import useTags from "../hooks/useTags";
@@ -70,6 +71,12 @@ export default function EditAssetModal({ asset }) {
       await axios.patch(BASE_API_URL + asset.id + "/", assetFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      toaster.create({
+        description: "Successfully Edited Asset!",
+        type: "info"
+      });
+      
     } catch (err) {
       console.log(err);
     }

@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Button, CloseButton, Dialog, Portal, FileUpload, Icon } from "@chakra-ui/react";
+import { toaster } from "../styles/ui/toaster";
 import { LuUpload } from "react-icons/lu";
 import { useState, useEffect } from "react";
 import { fileTypeFromBlob } from "file-type";
@@ -54,6 +55,12 @@ export default function UpdateAssetModal({ asset }) {
       await axios.post("http://127.0.0.1:8000/assets/", assetFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      toaster.create({
+        description: "Successfully Updated Only Asset File!",
+        type: "info"
+      });
+
     } catch (err) {
       // Does not do anything for now.
       console.log("error", err);

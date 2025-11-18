@@ -225,7 +225,7 @@ export default function PreviewAssetCardv2({ asset, exposure, shadowIntensity, s
 
                   <>
                     <Box>
-                      <p>Shadow Softness</p>
+                      <p>Background Colour</p>
                       <Box marginTop="10px">
                         <Sketch
                           style={{ width: 300 }}

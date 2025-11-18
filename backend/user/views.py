@@ -26,10 +26,17 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by("-date_joined")
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+
     def get_permissions(self):
         if self.request.method == "POST":
             return [AllowAny()]
         return [IsAdminOrSelf()]
+    
+    # check here anqi
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True  # allow partial PATCH
+        return super().update(request, *args, **kwargs)
+
     
 class GroupViewSet(viewsets.ModelViewSet):
     """
