@@ -1,15 +1,10 @@
 import {
-  Accordion,
   Box,
   Button,
-  Card,
   CloseButton,
   Dialog,
   Grid,
-  GridItem,
-  NumberInput,
   Portal,
-  Span,
   Heading,
   Flex,
 } from "@chakra-ui/react";
@@ -90,8 +85,8 @@ export default function PreviewAssetModal({ asset }) {
                         {/* Display png and jpg images */}
                         {(asset.file_type === "png" ||
                           asset.file_type === "jpg") && (
-                          <PreviewImageAsset assetURL={asset.url} />
-                        )}
+                            <PreviewImageAsset assetURL={asset.url} />
+                          )}
 
                         {/* Display mp4 */}
                         {asset.file_type === "mp4" && (
@@ -100,7 +95,20 @@ export default function PreviewAssetModal({ asset }) {
                       </Box>
 
                       <Box>
-                        <PreviewAssetCardv2 asset={asset}/>
+
+                        <PreviewAssetCardv2
+                          asset={asset}
+                          exposure={exposure}
+                          shadowIntensity={shadowIntensity}
+                          shadowSoftness={shadowSoftness}
+                          hsva={hsva}
+
+                          onExposureChange={setExposure}
+                          onShadowIntensityChange={setShadowIntensity}
+                          onShadowSoftnessChange={setShadowSoftness}
+                          onHsvaChange={setHsva}
+                        />
+
                       </Box>
                     </Grid>
                   </Box>
