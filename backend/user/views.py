@@ -8,6 +8,16 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import NewTokenObtainPairSerializer
 
 # Create your views here.
+
+class IsAdminOrSelf(permissions.BasePermission):
+    """
+    Allow access if user is admin, or if user is requesting their own object.
+    """
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_superuser:
+            return True
+        return obj == request.user
+    
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -19,11 +29,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.request.method == "POST":
             return [AllowAny()]
-        return [IsAdminUser()]
+        return [IsAdminOrSelf()]
     
-
-    
-
 class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.

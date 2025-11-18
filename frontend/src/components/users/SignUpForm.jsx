@@ -87,6 +87,7 @@ export default function SignUpForm() {
           fontWeight="bold"
           marginBottom="50px"
         >
+
           Sign Up
         </Heading>
 

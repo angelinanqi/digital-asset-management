@@ -23,10 +23,64 @@ export default function UserProfile() {
 
   const router = useRouter();
 
+  const [id, setId] = useState("");
+  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [group, setGroup] = useState("");
+
+
   const handleLogOut = () => {
+    localStorage.clear();
     router.push("/login");
     alert("You have been logged out!");
   }
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    const storedId = localStorage.getItem("id");
+    const storedGroup = localStorage.getItem("group");
+    const accessToken = localStorage.getItem("accessToken");
+
+    // If no token, redirect to login
+    if (!accessToken) {
+      router.push("/login");
+      return;
+    }
+
+    // Update state
+    setUsername(storedUsername || "");
+    setId(storedId || "");
+    setGroup(storedGroup || "");
+
+    const getUserDetails = async () => {
+      try {
+        const response = await axios.get(`${BASE_API_URL}${storedId}/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        // Used for debugging purposes
+        console.log("response", response.data);
+
+        // Set the user first name
+        setFirstName(response.data.first_name);
+
+        // Set the user last name
+        setLastName(response.data.last_name);
+
+        // Set the user email
+        setEmail(response.data.email);
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+
+    getUserDetails();
+
+  }, [router]);
 
 
   return (
@@ -55,10 +109,11 @@ export default function UserProfile() {
                   <CgUserlane size="60px" color="white" />
                 </Box>
 
-                <Heading>Hello, username or Name!</Heading>
+                <Heading>Account Type: {group}</Heading>
+                <Heading>Hello, {username}!</Heading>
 
                 <Text fontSize="md" color="fg.muted">
-                  useremail@gmail.com
+                  {email}
                 </Text>
 
                 <Button colorPalette="blue" mt="10px" width="180px" onClick={handleLogOut}>Log Out</Button>
@@ -100,7 +155,7 @@ export default function UserProfile() {
                       </Text>
                       <Input
                         placeholder="Enter your first name"
-                        defaultValue="Your first name"
+                        defaultValue={firstName}
                       />
                     </Box>
 
@@ -110,7 +165,7 @@ export default function UserProfile() {
                       </Text>
                       <Input
                         placeholder="Enter your last name"
-                        defaultValue="Your last name"
+                        defaultValue={lastName}
                       />
                     </Box>
 
@@ -120,7 +175,7 @@ export default function UserProfile() {
                       </Text>
                       <Input
                         placeholder="Your email"
-                        defaultValue="useremail@gmail.com"
+                        defaultValue={email}
                       />
                     </Box>
 
