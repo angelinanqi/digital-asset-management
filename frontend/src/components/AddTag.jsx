@@ -69,9 +69,9 @@ export default function AddTag() {
             {/*cancel and save btn*/}
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
-                <Button>Cancel</Button>
+                <Button variant="surface" colorPalette="gray">Cancel</Button>
               </Dialog.ActionTrigger>
-              <Button onClick={handleCreateTag}>Save</Button>
+              <Button background="blue.700" color="white" onClick={handleCreateTag}>Save</Button>
             </Dialog.Footer>
 
             {/*close btn on top right*/}
