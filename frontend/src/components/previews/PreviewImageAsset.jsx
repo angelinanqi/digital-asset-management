@@ -1,13 +1,13 @@
 import { Image } from "@chakra-ui/react";
 
-export default function PreviewImageAsset({ assetURL }) {
+export default function PreviewImageAsset({ assetURL, h, w }) {
   return (
     <>
       {/* Use the url prop (assetURL) to display asset image */}
       <Image
         rounded="lg"
-        height="580px"
-        width="830px"
+        height={h}
+        width={w}
         fit="contain"
         src={assetURL}
       />

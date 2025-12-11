@@ -1,10 +1,10 @@
 import { AspectRatio } from "@chakra-ui/react";
 
-export default function PreviewVideoAsset({ assetName, assetURL }) {
+export default function PreviewVideoAsset({ assetName, assetURL, h, w }) {
   return (
     <>
       {/* Display video file based on url (assetURL) */}
-      <AspectRatio w="830px" h="580px" rounded="lg" overflow="hidden">
+      <AspectRatio w={w} h={h} rounded="lg" overflow="hidden">
         <iframe
           title={assetName}
           src={assetURL}

@@ -1,23 +1,12 @@
-import {
-  Button,
-  Card,
-  Tabs,
-  DataList,
-  NumberInput,
-  Box,
-  Dialog,
-  Portal,
-  CloseButton,
-  Grid,
-  Flex,
-  Table,
-  Link,
-} from "@chakra-ui/react";
+import { Button, Card, Tabs, DataList, NumberInput, Box, Dialog, Portal, CloseButton, Grid, Flex, Table, Text, } from "@chakra-ui/react";
+import { RxPinBottom, RxEyeOpen } from "react-icons/rx";
 import { useState, useEffect } from "react";
 import Sketch from "@uiw/react-color-sketch";
 import useDownloader from "react-use-downloader";
 import EditAssetModal from "../EditAssetModal";
 import UpdateAssetModal from "../UpdateAssetModal";
+import PreviewImageAsset from "./PreviewImageAsset";
+import PreviewVideoAsset from "./PreviewVideoAsset";
 import axios from "axios";
 
 export default function PreviewAssetCardv2({
@@ -44,6 +33,9 @@ export default function PreviewAssetCardv2({
 
   // Only enable advanced settings for 3D models
   const is3DModel = asset.file_type === "glb";
+
+  const DIALOG_WIDTH = "760px";
+  const DIALOG_HEIGHT = "460px";
 
   const metadata = [
     { label: "Name", value: asset.name },
@@ -155,15 +147,17 @@ export default function PreviewAssetCardv2({
                               </Dialog.Header>
                               <Dialog.Body>
                                 <p>
-                                  This will permanently delete your
-                                  asset and remove it from the system!
+                                  This will permanently delete your asset and
+                                  remove it from the system!
                                 </p>
                               </Dialog.Body>
                               <Dialog.Footer>
                                 <Dialog.ActionTrigger asChild>
                                   <Button variant="outline">Cancel</Button>
                                 </Dialog.ActionTrigger>
-                                <Button variant="surface" colorPalette="red">Delete</Button>
+                                <Button variant="surface" colorPalette="red">
+                                  Delete
+                                </Button>
                               </Dialog.Footer>
                               <Dialog.CloseTrigger asChild>
                                 <CloseButton size="sm" />
@@ -206,7 +200,9 @@ export default function PreviewAssetCardv2({
                         <NumberInput.Root
                           width="150px"
                           value={shadowIntensity}
-                          onValueChange={(e) => onShadowIntensityChange(e.value)}
+                          onValueChange={(e) =>
+                            onShadowIntensityChange(e.value)
+                          }
                           min="0"
                           max="2"
                           step={0.01}
@@ -264,30 +260,116 @@ export default function PreviewAssetCardv2({
                     <Table.Row>
                       <Table.ColumnHeader>Version No.</Table.ColumnHeader>
                       <Table.ColumnHeader>File</Table.ColumnHeader>
+                      <Table.ColumnHeader>Actions</Table.ColumnHeader>
                     </Table.Row>
                   </Table.Header>
 
                   <Table.Body>
                     {allFiles.map((a) => (
                       <Table.Row key={a.version_no}>
+                        {/*version number*/}
                         <Table.Cell>{a.version_no}</Table.Cell>
+                        {/*file name*/}
+                        <Table.Cell>{a.name + "(" + a.version_no + ")" + "." + a.file_type}</Table.Cell>
+                        {/*actions*/}
                         <Table.Cell>
-                          <Link
-                            variant="plain"
-                            onClick={() =>
-                              download(
-                                "http://127.0.0.1:8000" + a.url,
-                                a.name + "." + a.file_type
-                              )
-                            }
-                          >
-                            {a.name +
-                              "(" +
-                              a.version_no +
-                              ")" +
-                              "." +
-                              a.file_type}
-                          </Link>
+                          <Flex direction="row" alignItems="center" gap="8px">
+                            {/*preview version*/}
+                            <Dialog.Root>
+                              <Dialog.Trigger asChild>
+                                <Box
+                                  as="span"
+                                  color="gray.400"
+                                  cursor="pointer"
+                                  _hover={{ color: "gray.500" }}
+                                >
+                                  <RxEyeOpen size={24} />
+                                </Box>
+                              </Dialog.Trigger>
+
+                              {/*dialog for viewing older version*/}
+                              <Portal>
+                                <Dialog.Backdrop />
+                                <Dialog.Positioner>
+                                  <Dialog.Content maxWidth={DIALOG_WIDTH} width="100%">
+                                    <Dialog.Header>
+                                      <Dialog.Title>
+                                        {a.name + "(" + a.version_no + ")" + "." + a.file_type}
+                                        <Text fontSize="sm" color="gray.500">{"Version " + a.version_no}</Text>
+                                      </Dialog.Title>
+                                    </Dialog.Header>
+
+                                    <Dialog.Body>
+                                      <Box
+                                        borderWidth="1px"
+                                        rounded="md"
+                                        bg={
+                                          a.file_type === "png" ||
+                                          a.file_type === "jpg" ||
+                                          a.file_type === "mp4"
+                                            ? "gray.100"
+                                            : "transparent"
+                                        }
+                                      >
+                                        {/* Display 3D models */}
+                                        {a.file_type === "glb" && (
+                                          <model-viewer
+                                            alt={a.name}
+                                            src={"http://127.0.0.1:8000" + a.url}
+                                            shadow-intensity={shadowIntensity}
+                                            shadow-softness={shadowSoftness}
+                                            exposure={exposure}
+                                            camera-controls
+                                            auto-rotate
+                                            touch-action="pan-y"
+                                            environment-image="neutral"
+                                            style={{
+                                              width: DIALOG_WIDTH,
+                                              height: DIALOG_HEIGHT,
+                                              borderRadius: "12px",
+                                              backgroundColor: "transparent",
+                                            }}
+                                          />
+                                        )}
+
+                                        {/* Display png and jpg images */}
+                                        {(a.file_type === "png" ||
+                                          a.file_type === "jpg") && (
+                                          <PreviewImageAsset
+                                            assetURL={"http://127.0.0.1:8000" + a.url}
+                                            h={DIALOG_HEIGHT}
+                                            w={DIALOG_WIDTH}
+                                          />
+                                        )}
+
+                                        {/* Display mp4 */}
+                                        {a.file_type === "mp4" && (
+                                          <PreviewVideoAsset
+                                            assetURL={"http://127.0.0.1:8000" + a.url}
+                                            h={DIALOG_HEIGHT}
+                                            w="auto"
+                                          />
+                                        )}
+                                      </Box>
+                                    </Dialog.Body>
+                                    <Dialog.CloseTrigger asChild>
+                                      <CloseButton size="sm" />
+                                    </Dialog.CloseTrigger>
+                                  </Dialog.Content>
+                                </Dialog.Positioner>
+                              </Portal>
+                            </Dialog.Root>
+
+                            <Box
+                              as="span"
+                              color="gray.400"
+                              cursor="pointer"
+                              _hover={{ color: "gray.500" }}
+                              onClick={() => download("http://127.0.0.1:8000" + a.url, a.name + "." + a.file_type)}
+                            >
+                              <RxPinBottom size={24} />
+                            </Box>
+                          </Flex>
                         </Table.Cell>
                       </Table.Row>
                     ))}

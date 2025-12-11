@@ -87,12 +87,12 @@ export default function PreviewAssetModal({ asset }) {
                         {/* Display png and jpg images */}
                         {(asset.file_type === "png" ||
                           asset.file_type === "jpg") && (
-                          <PreviewImageAsset assetURL={asset.url} />
+                          <PreviewImageAsset assetURL={asset.url} h="580px" w="830px"/>
                         )}
 
                         {/* Display mp4 */}
                         {asset.file_type === "mp4" && (
-                          <PreviewVideoAsset assetURL={asset.url} />
+                          <PreviewVideoAsset assetURL={asset.url} h="580px" w="830px"/>
                         )}
                       </Box>
 
