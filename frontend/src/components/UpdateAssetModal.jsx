@@ -57,7 +57,7 @@ export default function UpdateAssetModal({ asset }) {
       });
 
       toaster.create({
-        description: "Successfully Updated Only Asset File!",
+        description: "Successfully updated this file!",
         type: "info"
       });
 
