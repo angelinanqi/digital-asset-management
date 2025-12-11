@@ -365,7 +365,7 @@ export default function PreviewAssetCardv2({
                               color="gray.400"
                               cursor="pointer"
                               _hover={{ color: "gray.500" }}
-                              onClick={() => download("http://127.0.0.1:8000" + a.url, a.name + "." + a.file_type)}
+                              onClick={() => download("http://127.0.0.1:8000" + a.url, a.name + "(" + a.version_no + ")" + "." + a.file_type)}
                             >
                               <RxPinBottom size={24} />
                             </Box>
