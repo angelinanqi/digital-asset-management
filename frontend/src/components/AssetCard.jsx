@@ -247,7 +247,7 @@ export default function AssetCard() {
 
                 {/* Button: Download */}
                 <Button
-                  variant="outline"
+                  variant="surface"
                   onClick={() =>
                     download(asset.url, asset.name + "." + asset.file_type)
                   }

@@ -31,7 +31,7 @@ export default function PreviewAssetModal({ asset }) {
       {/* Button: Preview - > Opens */}
       <Dialog.Root size="cover" placement="center">
         <Dialog.Trigger asChild>
-          <Button variant="outline">Preview</Button>
+          <Button variant="surface">Preview</Button>
         </Dialog.Trigger>
         <Portal>
           <Dialog.Backdrop />
