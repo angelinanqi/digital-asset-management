@@ -4,11 +4,13 @@ import {
   Field,
   Fieldset,
   Input,
+  Image,
   Center,
   Heading,
   Button,
   Link,
 } from "@chakra-ui/react";
+import Logo from "@/assets/ManticAI_Logo.png";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -22,7 +24,7 @@ export default function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
-  
+
   const router = useRouter();
 
   const BASE_API_URL = "http://127.0.0.1:8000/users/";
@@ -63,7 +65,7 @@ export default function SignUpForm() {
       setError(""); // clear error on success
       alert("Successful Registration!");
 
-      router.push("/login"); 
+      router.push("/login");
 
 
     } catch (err) {
@@ -87,7 +89,11 @@ export default function SignUpForm() {
           fontWeight="bold"
           marginBottom="50px"
         >
-          
+          <Image
+            src={Logo.src ?? Logo}
+            alt="logo"
+          />
+
           Sign Up
         </Heading>
 
@@ -154,7 +160,9 @@ export default function SignUpForm() {
 
             <Button
               marginTop="20px"
-              colorPalette="blue"
+              variant="outline" 
+              bg="blue.700" 
+              color="white"
               onClick={handleRegister}
             >
               Sign Up

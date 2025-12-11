@@ -180,7 +180,9 @@ export default function UserProfile() {
                 <Dialog.Root role="alertdialog">
                   <Dialog.Trigger asChild>
                     <Button
-                      colorPalette="blue"
+                      variant="outline" 
+                      bg="blue.700" 
+                      color="white"
                       mt="10px"
                       width="180px"
                     >
@@ -203,7 +205,7 @@ export default function UserProfile() {
                           <Dialog.ActionTrigger asChild>
                             <Button variant="outline">Cancel</Button>
                           </Dialog.ActionTrigger>
-                          <Button colorPalette="blue" onClick={handleLogOut}>Log Out</Button>
+                          <Button variant="outline" bg="blue.700" color="white" onClick={handleLogOut}>Log Out</Button>
                         </Dialog.Footer>
                         <Dialog.CloseTrigger asChild>
                           <CloseButton size="sm" />
@@ -277,7 +279,7 @@ export default function UserProfile() {
                       />
                     </Box>
 
-                    <Button colorPalette="blue" mt="10px" width="150px" onClick={saveChanges}>
+                    <Button variant="outline" bg="blue.700" color="white" mt="10px" width="150px" onClick={saveChanges}>
                       Save Changes
                     </Button>
                   </Box>
@@ -325,7 +327,7 @@ export default function UserProfile() {
                       />
                     </Box>
 
-                    <Button colorPalette="blue" mt="10px" width="180px" onClick={updatePassword}>
+                    <Button variant="outline" bg="blue.700" color="white"mt="10px" width="180px" onClick={updatePassword}>
                       Update Password
                     </Button>
                   </Box>

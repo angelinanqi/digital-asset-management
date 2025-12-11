@@ -76,7 +76,7 @@ export default function EditAssetModal({ asset }) {
         description: "Successfully Edited Asset!",
         type: "info"
       });
-      
+
     } catch (err) {
       console.log(err);
     }
@@ -91,7 +91,11 @@ export default function EditAssetModal({ asset }) {
     <>
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <Button variant="surface">Edit</Button>
+          <Button 
+          variant="surface"
+          >
+            Edit
+          </Button>
         </Dialog.Trigger>
 
         <Portal>
