@@ -20,9 +20,17 @@ import EditAssetModal from "../EditAssetModal";
 import UpdateAssetModal from "../UpdateAssetModal";
 import axios from "axios";
 
-export default function PreviewAssetCardv2({ asset, exposure, shadowIntensity, shadowSoftness, hsva,
-  onExposureChange, onShadowIntensityChange, onShadowSoftnessChange, onHsvaChange }) {
-
+export default function PreviewAssetCardv2({
+  asset,
+  exposure,
+  shadowIntensity,
+  shadowSoftness,
+  hsva,
+  onExposureChange,
+  onShadowIntensityChange,
+  onShadowSoftnessChange,
+  onHsvaChange,
+}) {
   const BASE_API_DELETE = "http://127.0.0.1:8000/delete-asset-by-code/";
   const BASE_FILEVER_URL = "http://127.0.0.1:8000/get-all-file-versions/";
 
@@ -68,23 +76,26 @@ export default function PreviewAssetCardv2({ asset, exposure, shadowIntensity, s
 
   return (
     <>
-      <Card.Root>
-        <Card.Body height="">
-          {/*metadata/advanced settings/version control tab*/}
-          <Tabs.Root defaultValue="metadata" variant="outline">
+      <Card.Root height="580px" width="650px">
+        <Card.Body display="flex" flexDirection="column" height="100%">
+          <Tabs.Root
+            defaultValue="metadata"
+            variant="outline"
+            style={{ flex: 1, display: "flex", flexDirection: "column" }}
+          >
             <Tabs.List>
               <Tabs.Trigger value="metadata">Metadata</Tabs.Trigger>
-
               {/* Only show Advanced tab if 3D model */}
               {is3DModel && (
                 <Tabs.Trigger value="advanced">Advanced Settings</Tabs.Trigger>
               )}
-
               <Tabs.Trigger value="version">Version Control</Tabs.Trigger>
             </Tabs.List>
-
             {/*metadata tab*/}
-            <Tabs.Content value="metadata">
+            <Tabs.Content
+              value="metadata"
+              style={{ display: "flex", flexDirection: "column", flex: 1 }}
+            >
               <DataList.Root orientation="horizontal">
                 {metadata.map((item) => (
                   <DataList.Item key={item.label}>
@@ -101,7 +112,7 @@ export default function PreviewAssetCardv2({ asset, exposure, shadowIntensity, s
                 </DataList.Item>
               </DataList.Root>
 
-              <Box marginTop="86px">
+              <Box mt="auto">
                 <Flex justifyContent="space-between" alignItems="center">
                   <Button
                     variant="surface"
@@ -125,10 +136,13 @@ export default function PreviewAssetCardv2({ asset, exposure, shadowIntensity, s
 
                     {/* update btn (disabled for Viewer) */}
                     {localStorage.getItem("group") !== "Viewer" && (
-
-                      <Dialog.Root role="alertdialog" placement='center'>
+                      <Dialog.Root role="alertdialog" placement="center">
                         <Dialog.Trigger asChild>
-                          <Button variant="surface" colorPalette="red" onClick={() => deleteAsset(asset.code)}>
+                          <Button
+                            variant="surface"
+                            colorPalette="red"
+                            onClick={() => deleteAsset(asset.code)}
+                          >
                             Delete
                           </Button>
                         </Dialog.Trigger>

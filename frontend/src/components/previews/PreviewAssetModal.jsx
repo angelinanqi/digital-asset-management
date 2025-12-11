@@ -56,7 +56,9 @@ export default function PreviewAssetModal({ asset }) {
                         borderWidth="1px"
                         rounded="md"
                         bg={
-                          asset.file_type === "png" || asset.file_type === "jpg" || asset.file_type === "mp4"
+                          asset.file_type === "png" ||
+                          asset.file_type === "jpg" ||
+                          asset.file_type === "mp4"
                             ? "gray.100"
                             : "transparent"
                         }
@@ -74,8 +76,8 @@ export default function PreviewAssetModal({ asset }) {
                             touch-action="pan-y"
                             environment-image="neutral"
                             style={{
-                              width: "800px",
-                              height: "500px",
+                              width: "830px",
+                              height: "579px", //if full 580, small cosmetic issue
                               borderRadius: "12px",
                               backgroundColor: hsvaToHex(hsva),
                             }}
@@ -85,8 +87,8 @@ export default function PreviewAssetModal({ asset }) {
                         {/* Display png and jpg images */}
                         {(asset.file_type === "png" ||
                           asset.file_type === "jpg") && (
-                            <PreviewImageAsset assetURL={asset.url} />
-                          )}
+                          <PreviewImageAsset assetURL={asset.url} />
+                        )}
 
                         {/* Display mp4 */}
                         {asset.file_type === "mp4" && (
@@ -95,20 +97,17 @@ export default function PreviewAssetModal({ asset }) {
                       </Box>
 
                       <Box>
-
                         <PreviewAssetCardv2
                           asset={asset}
                           exposure={exposure}
                           shadowIntensity={shadowIntensity}
                           shadowSoftness={shadowSoftness}
                           hsva={hsva}
-
                           onExposureChange={setExposure}
                           onShadowIntensityChange={setShadowIntensity}
                           onShadowSoftnessChange={setShadowSoftness}
                           onHsvaChange={setHsva}
                         />
-
                       </Box>
                     </Grid>
                   </Box>
