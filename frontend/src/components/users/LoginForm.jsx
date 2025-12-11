@@ -4,11 +4,13 @@ import {
   Field,
   Fieldset,
   Input,
+  Image,
   Center,
   Heading,
   Button,
   Link,
 } from "@chakra-ui/react";
+import Logo from "@/assets/ManticAI_Logo.png";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -70,12 +72,19 @@ export default function LoginForm() {
         w="lg"
         textAlign="center"
       >
+
+
         <Heading
           size="2xl"
           color="blue.700"
           fontWeight="bold"
           marginBottom="50px"
         >
+          <Image
+            src={Logo.src ?? Logo}
+            alt="logo"
+          />
+
           Digital Asset Management System
         </Heading>
 
@@ -101,7 +110,7 @@ export default function LoginForm() {
               />
             </Field.Root>
 
-            <Button marginTop="30px" colorPalette="blue" onClick={handleLogin}>
+            <Button marginTop="30px" variant="outline" bg="blue.700" color="white" onClick={handleLogin}>
               Login
             </Button>
 
