@@ -1,5 +1,5 @@
 # digital-asset-management
-5005CMD Aug25: Digital Asset Management System
+Digital Asset Management System
 
 Group Project 6
 - Bryan Tan Zhu Wei
