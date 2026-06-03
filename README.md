@@ -8,6 +8,8 @@ Group Project 6
 Digital Asset Management System
 A full-stack digital asset management (DAM) platform built with Next.js, Chakra UI, Django REST Framework, and PostgreSQL.
 
+https://github.com/user-attachments/assets/47abe49b-b2b4-4367-8bbb-b8620ab0321e
+
 Technology Stack
 Frontend
 - Next.js
