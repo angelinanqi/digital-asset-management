@@ -13,15 +13,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 
+from dotenv import load_dotenv
+
+from .environment import database_from_environment, required_environment
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Explicit process/PowerShell variables take precedence over the local file.
+# Do not expand ${...} inside credentials such as generated passwords.
+load_dotenv(BASE_DIR / ".env", override=False, interpolate=False)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-)5kbro77x+-8d90a=r!qf_k6f9n7(wa_&micppc57=&nf#lmi3"
+SECRET_KEY = required_environment("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -84,16 +92,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dam-main",
-        "USER": "postgres",
-        "PASSWORD": "zxcv1234",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
-}
+DATABASES = {"default": database_from_environment()}
 
 # Source - https://stackoverflow.com/a
 # Posted by Aswin Murugesh, modified by community. See post 'Timeline' for change history

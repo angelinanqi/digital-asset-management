@@ -1,0 +1,9 @@
+# Runtime dependencies, pinned to the locally reviewed environment.
+# Python 3.12 is the recommended development baseline.
+Django==5.2.19
+djangorestframework==3.18.3
+djangorestframework-simplejwt==5.5.1
+django-cors-headers==4.9.0
+django-filter==26.2
+psycopg[binary]==3.3.8
+python-dotenv==1.2.1
