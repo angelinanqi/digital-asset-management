@@ -3,6 +3,7 @@ from .models import User
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
+from django.db import transaction
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
@@ -86,20 +87,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         instance.save()
         return instance
 
+    @transaction.atomic
     def create(self, validated_data):
         password = validated_data.pop("password1")
         validated_data.pop("password2")
-        groups_data = validated_data.pop("groups", None)
-        if not groups_data:
-            try:
-                default_group = Group.objects.get(id=1)
-                groups_data = [default_group.id]
-            except Group.DoesNotExist:
-                groups_data = []  # safe fallback
+        # Public signup always gets Viewer, regardless of database-generated IDs.
+        validated_data.pop("groups", None)
+        default_group, _ = Group.objects.get_or_create(name="Viewer")
         user = User(**validated_data)
         user.set_password(password)
         user.save()
-        user.groups.set(groups_data)
+        user.groups.set([default_group])
         return user
 
 
